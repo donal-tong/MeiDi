@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<color name="tab_selected">#00009ce4</color>
+	<color name="temp_color">#ea6e51</color>
+	<color name="time_color">#94e849</color>
+	<color name="fall_color">#33c5ea</color>
+	<color name="pie_paint_color">#015f77</color>
+	
+</resources>

@@ -1,0 +1,7 @@
+<resources>
+
+    <string name="app_name">MeiDi</string>
+	<string name="main_home">首页</string>
+    <string name="main_diy">我的订单</string>
+    <string name="main_my_order">我的印品</string>
+</resources>
