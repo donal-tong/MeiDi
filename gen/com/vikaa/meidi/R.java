@@ -196,12 +196,13 @@ public final class R {
     }
     public static final class id {
         public static final int cImageView=0x7f0b0006;
-        public static final int chart=0x7f0b001c;
+        public static final int chart=0x7f0b001d;
+        public static final int chartLayout=0x7f0b001a;
         public static final int contentView=0x7f0b0004;
         public static final int dayTV=0x7f0b000a;
-        public static final int fall=0x7f0b001b;
+        public static final int fall=0x7f0b001c;
         public static final int head_arrowImageView=0x7f0b000d;
-        public static final int iconImageView=0x7f0b0020;
+        public static final int iconImageView=0x7f0b0021;
         public static final int listView=0x7f0b000c;
         public static final int listview_head_loading=0x7f0b000e;
         public static final int locationTV=0x7f0b0001;
@@ -221,10 +222,10 @@ public final class R {
         public static final int refreshIV=0x7f0b0010;
         public static final int tempTV=0x7f0b0005;
         public static final int tipImageView=0x7f0b0018;
-        public static final int view=0x7f0b001a;
-        public static final int waterFallTV=0x7f0b001f;
-        public static final int waterTempTV=0x7f0b001d;
-        public static final int waterTimeTV=0x7f0b001e;
+        public static final int view=0x7f0b001b;
+        public static final int waterFallTV=0x7f0b0020;
+        public static final int waterTempTV=0x7f0b001e;
+        public static final int waterTimeTV=0x7f0b001f;
         public static final int weatherTV=0x7f0b0007;
         public static final int wetTV=0x7f0b0009;
         public static final int windTV=0x7f0b0008;
