@@ -8,7 +8,7 @@ import tools.BaseActivity;
 import tools.StringUtils;
 import widget.PullToRefreshListView;
 
-public class Tips extends BaseActivity {
+public class Tips extends AppActivity {
 	private PullToRefreshListView mlistView;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -6,4 +6,6 @@
 	<color name="fall_color">#33c5ea</color>
 	<color name="pie_paint_color">#015f77</color>
 	
+	<color name="weather_background_color">#7f4a6a7d</color>
+	
 </resources>

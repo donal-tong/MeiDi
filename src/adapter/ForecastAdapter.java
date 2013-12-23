@@ -5,7 +5,6 @@ import java.util.List;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import tools.ImageCacheUtil.OPTIONS;
 import tools.ImageUtils;
 import tools.Logger;
 
@@ -22,7 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class ForecastAdapter extends BaseAdapter implements OPTIONS{
+public class ForecastAdapter extends BaseAdapter {
 	static class ViewHolder {
 		ImageView iconImageView;
 		TextView dayTV;

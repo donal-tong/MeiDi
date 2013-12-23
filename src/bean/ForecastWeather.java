@@ -179,6 +179,11 @@ public class ForecastWeather extends Entity{
 			weather.img_title10 = object.getString("img_title10");
 			weather.img_title11 = object.getString("img_title11");
 			weather.img_title12 = object.getString("img_title12");
+			weather.index = object.getString("index");
+			weather.index_uv = object.getString("index_uv");
+			weather.index_co = object.getString("index_co");
+			weather.index_xc = object.getString("index_xc");
+			weather.index_tr = object.getString("index_tr");
 		} catch (JSONException e) {
 			throw AppException.json(e);
 		}

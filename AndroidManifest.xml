@@ -58,15 +58,15 @@
        	 	</intent-filter>
         </activity>
         
-        <activity android:name="ui.Home" android:screenOrientation="portrait"  >
+        <activity android:name="ui.Home" android:screenOrientation="portrait" android:launchMode="singleTask">
                        
         </activity>
         
-		<activity android:name="ui.Wash" android:screenOrientation="portrait"  >
+		<activity android:name="ui.Wash" android:screenOrientation="portrait" android:launchMode="singleTask" >
                        
         </activity>
         
-		<activity android:name="ui.Tips" android:screenOrientation="portrait"  >
+		<activity android:name="ui.Tips" android:screenOrientation="portrait" android:launchMode="singleTask" >
                        
         </activity>
         

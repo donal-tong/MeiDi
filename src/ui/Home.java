@@ -1,8 +1,8 @@
 package ui;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import tools.AppException;
 import tools.CalendarUtil;
@@ -26,46 +26,97 @@ import com.amap.api.location.LocationProviderProxy;
 import com.vikaa.meidi.R;
 
 import config.ApiClent;
+import config.CommonValue;
 
-import adapter.ForecastAdapter;
 import adapter.HomeAdapter;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.LinearLayout.LayoutParams;
 
-public class Home extends tools.BaseActivity implements AMapLocationListener, OnHeaderRefreshListener, OnFooterRefreshListener{
+public class Home extends AppActivity implements AMapLocationListener, OnHeaderRefreshListener, OnFooterRefreshListener{
 	private LocationManagerProxy mAMapLocManager = null;
+	private View header;
 	private TextView locationTV;
 	private TextView tempTV;
 	private TextView weatherTV;
-	private TextView windTV;
-	private TextView wetTV;
 	private TextView dayTV;
 	private TextView lunarTV;
 	private ImageView cImageView;
-	private ListView forecastListView;
-	private ForecastAdapter forecastAdapter;
-	private List<SKWeather> datas = new ArrayList<SKWeather>();
+	private ImageView defaultImageView;
+	
+	private TextView minMaxTV;
+	private TextView windTV;
+	private TextView wetTV;
+	
+	private TextView clothTV;
+	private TextView lineTV;
+	private TextView sportTV;
+	private TextView cleanupTV;
+	private TextView carTV;
+	private TextView tripTV;
+	
+	private TextView day1TV;
+	private TextView day1maxTV;
+	private TextView day1minTV;
+	private ImageView day1dIV;
+	private ImageView day1nIV;
+	private TextView day2TV;
+	private TextView day2maxTV;
+	private TextView day2minTV;
+	private ImageView day2dIV;
+	private ImageView day2nIV;
+	private TextView day3TV;
+	private TextView day3maxTV;
+	private TextView day3minTV;
+	private ImageView day3dIV;
+	private ImageView day3nIV;
+	private TextView day4TV;
+	private TextView day4maxTV;
+	private TextView day4minTV;
+	private ImageView day4dIV;
+	private ImageView day4nIV;
+	private TextView day5TV;
+	private TextView day5maxTV;
+	private TextView day5minTV;
+	private ImageView day5dIV;
+	private ImageView day5nIV;
+	private TextView day6TV;
+	private TextView day6maxTV;
+	private TextView day6minTV;
+	private ImageView day6dIV;
+	private ImageView day6nIV;
+	
+//	private ListView forecastListView;
+//	private ForecastAdapter forecastAdapter;
+//	private List<SKWeather> datas = new ArrayList<SKWeather>();
 	private PullToRefreshView mPullToRefreshView;
 	private ListView mListView;
-	private View header;
+	
+	private int screenWidth;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home);
+		screenWidth = ImageUtils.getDisplayWidth(this);
 		setUI();
 		mAMapLocManager = LocationManagerProxy.getInstance(this);
 		if(!appContext.isNetworkConnected()) {
-        	UIHelper.ToastMessage(this, R.string.network_not_connected);
+        	UIHelper.ToastMessage(this, R.string.network_not_connected, Toast.LENGTH_SHORT);
         }
         else {
         	mPullToRefreshView.headerRefreshing();
@@ -100,24 +151,202 @@ public class Home extends tools.BaseActivity implements AMapLocationListener, On
 		mListView = (ListView) findViewById(R.id.mlistView);
 		mListView.setDividerHeight(0);
 		header = getLayoutInflater().inflate(R.layout.home_head, null);
-		RelativeLayout contentView = (RelativeLayout) header.findViewById(R.id.contentView);
+		LinearLayout contentView = (LinearLayout) header.findViewById(R.id.contentView);
 		RelativeLayout.LayoutParams p = (RelativeLayout.LayoutParams) contentView.getLayoutParams();
-		p.height = ImageUtils.getDisplayHeighth(this) - ImageUtils.dip2px(this, 100);
+		p.height = 2*ImageUtils.getDisplayHeighth(this);
 		contentView.setLayoutParams(p);
+		Typeface face = Typeface.createFromAsset(getAssets(), "fonts/code.otf");
 		locationTV = (TextView) findViewById(R.id.locationTV);
 		tempTV = (TextView) header.findViewById(R.id.tempTV);
+		tempTV.setTypeface(face);
 		weatherTV = (TextView) header.findViewById(R.id.weatherTV);
-		windTV = (TextView) header.findViewById(R.id.windTV);
-		wetTV = (TextView) header.findViewById(R.id.wetTV);
+		weatherTV.setTypeface(face);
+		
 		dayTV = (TextView) header.findViewById(R.id.dayTV);
+		dayTV.setTypeface(face);
 		lunarTV = (TextView) header.findViewById(R.id.lunarTV);
+		lunarTV.setTypeface(face);
 		cImageView = (ImageView) header.findViewById(R.id.cImageView);
-		forecastListView = (ListView) header.findViewById(R.id.listView);
-		forecastListView.setDividerHeight(0);
-		forecastAdapter = new ForecastAdapter(this, datas);
-		forecastListView.setAdapter(forecastAdapter);
-		mListView.addHeaderView(header);
+		defaultImageView = (ImageView) header.findViewById(R.id.defaultImageView);
+		
+		minMaxTV = (TextView) header.findViewById(R.id.minMaxTV);
+		minMaxTV.setTypeface(face);
+		windTV = (TextView) header.findViewById(R.id.windTV);
+		windTV.setTypeface(face);
+		wetTV = (TextView) header.findViewById(R.id.wetTV);
+		wetTV.setTypeface(face);
+		int w = ImageUtils.getDisplayWidth(this);
+		LinearLayout.LayoutParams p1 = (LayoutParams) minMaxTV.getLayoutParams();
+		p1.width = w/3;
+		minMaxTV.setLayoutParams(p1);
+		LinearLayout.LayoutParams p2 = (LayoutParams) windTV.getLayoutParams();
+		p2.width = w/3;
+		windTV.setLayoutParams(p2);
+		LinearLayout.LayoutParams p3 = (LayoutParams) wetTV.getLayoutParams();
+		p3.width = w/3;
+		wetTV.setLayoutParams(p3);
+//		forecastListView = (ListView) header.findViewById(R.id.listView);
+//		forecastListView.setDividerHeight(0);
+//		forecastAdapter = new ForecastAdapter(this, datas);
+//		forecastListView.setAdapter(forecastAdapter);
+		initIndexUI();
+		initWeekWeatherUI();
+		mListView.addHeaderView(header, null, false);
 		mListView.setAdapter(new HomeAdapter());
+	}
+	
+	private void initIndexUI() {
+		RelativeLayout clothView = (RelativeLayout) header.findViewById(R.id.clothView);
+		RelativeLayout.LayoutParams pc = (RelativeLayout.LayoutParams) clothView.getLayoutParams();
+		pc.width = (ImageUtils.getDisplayWidth(this)-ImageUtils.dip2px(this, 26))/2;
+		clothView.setLayoutParams(pc);
+		
+		RelativeLayout lineView = (RelativeLayout) header.findViewById(R.id.lineView);
+		RelativeLayout.LayoutParams pl = (RelativeLayout.LayoutParams) lineView.getLayoutParams();
+		pl.width = (ImageUtils.getDisplayWidth(this)-ImageUtils.dip2px(this, 26))/2;
+		lineView.setLayoutParams(pl);
+		
+		RelativeLayout sportView = (RelativeLayout) header.findViewById(R.id.sportView);
+		RelativeLayout.LayoutParams ps = (RelativeLayout.LayoutParams) sportView.getLayoutParams();
+		ps.width = (ImageUtils.getDisplayWidth(this)-ImageUtils.dip2px(this, 26))/2;
+		sportView.setLayoutParams(ps);
+		
+		RelativeLayout cleanupView = (RelativeLayout) header.findViewById(R.id.cleanupView);
+		RelativeLayout.LayoutParams pcl = (RelativeLayout.LayoutParams) cleanupView.getLayoutParams();
+		pcl.width = (ImageUtils.getDisplayWidth(this)-ImageUtils.dip2px(this, 26))/2;
+		cleanupView.setLayoutParams(pcl);
+		
+		RelativeLayout carView = (RelativeLayout) header.findViewById(R.id.carView);
+		RelativeLayout.LayoutParams pca = (RelativeLayout.LayoutParams) carView.getLayoutParams();
+		pca.width = (ImageUtils.getDisplayWidth(this)-ImageUtils.dip2px(this, 26))/2;
+		carView.setLayoutParams(pca);
+		
+		RelativeLayout tripView = (RelativeLayout) header.findViewById(R.id.tripView);
+		RelativeLayout.LayoutParams pt = (RelativeLayout.LayoutParams) tripView.getLayoutParams();
+		pt.width = (ImageUtils.getDisplayWidth(this)-ImageUtils.dip2px(this, 26))/2;
+		tripView.setLayoutParams(pt);
+		
+		clothTV = (TextView) header.findViewById(R.id.clothTV);
+		lineTV = (TextView) header.findViewById(R.id.lineTV);
+		sportTV = (TextView) header.findViewById(R.id.sportTV);
+		cleanupTV = (TextView) header.findViewById(R.id.cleanupTV);
+		carTV = (TextView) header.findViewById(R.id.carTV);
+		tripTV = (TextView) header.findViewById(R.id.tripTV);
+	}
+	
+	private void initWeekWeatherUI() {
+		LinearLayout day1View = (LinearLayout) header.findViewById(R.id.day1View);
+		LinearLayout.LayoutParams p1 = (LayoutParams) day1View.getLayoutParams();
+		p1.width = ImageUtils.getDisplayWidth(this)/6;
+		day1View.setLayoutParams(p1);
+		
+		LinearLayout day2View = (LinearLayout) header.findViewById(R.id.day2View);
+		LinearLayout.LayoutParams p2 = (LayoutParams) day2View.getLayoutParams();
+		p2.width = ImageUtils.getDisplayWidth(this)/6;
+		day2View.setLayoutParams(p2);
+		
+		LinearLayout day3View = (LinearLayout) header.findViewById(R.id.day3View);
+		LinearLayout.LayoutParams p3 = (LayoutParams) day1View.getLayoutParams();
+		p3.width = ImageUtils.getDisplayWidth(this)/6;
+		day3View.setLayoutParams(p3);
+		
+		LinearLayout day4View = (LinearLayout) header.findViewById(R.id.day4View);
+		LinearLayout.LayoutParams p4 = (LayoutParams) day1View.getLayoutParams();
+		p4.width = ImageUtils.getDisplayWidth(this)/6;
+		day4View.setLayoutParams(p4);
+		
+		LinearLayout day5View = (LinearLayout) header.findViewById(R.id.day5View);
+		LinearLayout.LayoutParams p5 = (LayoutParams) day1View.getLayoutParams();
+		p5.width = ImageUtils.getDisplayWidth(this)/6;
+		day5View.setLayoutParams(p5);
+		
+		LinearLayout day6View = (LinearLayout) header.findViewById(R.id.day6View);
+		LinearLayout.LayoutParams p6 = (LayoutParams) day1View.getLayoutParams();
+		p6.width = ImageUtils.getDisplayWidth(this)/6;
+		day6View.setLayoutParams(p6);
+		
+		day1TV = (TextView) header.findViewById(R.id.day1TV);
+		day1maxTV = (TextView) header.findViewById(R.id.day1maxTV);
+		day1minTV = (TextView) header.findViewById(R.id.day1minTV);
+		day1dIV = (ImageView) header.findViewById(R.id.day1dImageView);
+		day1nIV = (ImageView) header.findViewById(R.id.day1nImageView);
+		
+		day2TV = (TextView) header.findViewById(R.id.day2TV);
+		day2maxTV = (TextView) header.findViewById(R.id.day2maxTV);
+		day2minTV = (TextView) header.findViewById(R.id.day2minTV);
+		day2dIV = (ImageView) header.findViewById(R.id.day2dImageView);
+		day2nIV = (ImageView) header.findViewById(R.id.day2nImageView);
+		
+		day3TV = (TextView) header.findViewById(R.id.day3TV);
+		day3maxTV = (TextView) header.findViewById(R.id.day3maxTV);
+		day3minTV = (TextView) header.findViewById(R.id.day3minTV);
+		day3dIV = (ImageView) header.findViewById(R.id.day3dImageView);
+		day3nIV = (ImageView) header.findViewById(R.id.day3nImageView);
+		
+		day4TV = (TextView) header.findViewById(R.id.day4TV);
+		day4maxTV = (TextView) header.findViewById(R.id.day4maxTV);
+		day4minTV = (TextView) header.findViewById(R.id.day4minTV);
+		day4dIV = (ImageView) header.findViewById(R.id.day4dImageView);
+		day4nIV = (ImageView) header.findViewById(R.id.day4nImageView);
+		
+		day5TV = (TextView) header.findViewById(R.id.day5TV);
+		day5maxTV = (TextView) header.findViewById(R.id.day5maxTV);
+		day5minTV = (TextView) header.findViewById(R.id.day5minTV);
+		day5dIV = (ImageView) header.findViewById(R.id.day5dImageView);
+		day5nIV = (ImageView) header.findViewById(R.id.day5nImageView);
+		
+		day6TV = (TextView) header.findViewById(R.id.day6TV);
+		day6maxTV = (TextView) header.findViewById(R.id.day6maxTV);
+		day6minTV = (TextView) header.findViewById(R.id.day6minTV);
+		day6dIV = (ImageView) header.findViewById(R.id.day6dImageView);
+		day6nIV = (ImageView) header.findViewById(R.id.day6nImageView);
+		
+		initWeekImageUI();
+	}
+	
+	private void initWeekImageUI() {
+		LinearLayout.LayoutParams pd1 = (LayoutParams) day1dIV.getLayoutParams();
+		pd1.width = screenWidth/6-ImageUtils.dip2px(this, 5);
+		day1dIV.setLayoutParams(pd1);
+		LinearLayout.LayoutParams pn1 = (LayoutParams) day1nIV.getLayoutParams();
+		pn1.width = screenWidth/6-ImageUtils.dip2px(this, 5);
+		day1nIV.setLayoutParams(pn1);
+		
+		LinearLayout.LayoutParams pd2 = (LayoutParams) day2dIV.getLayoutParams();
+		pd2.width = screenWidth/6-ImageUtils.dip2px(this, 5);
+		day2dIV.setLayoutParams(pd2);
+		LinearLayout.LayoutParams pn2 = (LayoutParams) day2nIV.getLayoutParams();
+		pn2.width = screenWidth/6-ImageUtils.dip2px(this, 5);
+		day2nIV.setLayoutParams(pn2);
+		
+		LinearLayout.LayoutParams pd3 = (LayoutParams) day3dIV.getLayoutParams();
+		pd3.width = screenWidth/6-ImageUtils.dip2px(this, 5);
+		day3dIV.setLayoutParams(pd3);
+		LinearLayout.LayoutParams pn3 = (LayoutParams) day3nIV.getLayoutParams();
+		pn3.width = screenWidth/6-ImageUtils.dip2px(this, 5);
+		day3nIV.setLayoutParams(pn3);
+		
+		LinearLayout.LayoutParams pd4 = (LayoutParams) day4dIV.getLayoutParams();
+		pd4.width = screenWidth/6-ImageUtils.dip2px(this, 5);
+		day4dIV.setLayoutParams(pd4);
+		LinearLayout.LayoutParams pn4 = (LayoutParams) day4nIV.getLayoutParams();
+		pn4.width = screenWidth/6-ImageUtils.dip2px(this, 5);
+		day4nIV.setLayoutParams(pn4);
+		
+		LinearLayout.LayoutParams pd5 = (LayoutParams) day5dIV.getLayoutParams();
+		pd5.width = screenWidth/6-ImageUtils.dip2px(this, 5);
+		day5dIV.setLayoutParams(pd5);
+		LinearLayout.LayoutParams pn5 = (LayoutParams) day5nIV.getLayoutParams();
+		pn5.width = screenWidth/6-ImageUtils.dip2px(this, 5);
+		day5nIV.setLayoutParams(pn5);
+		
+		LinearLayout.LayoutParams pd6 = (LayoutParams) day6dIV.getLayoutParams();
+		pd6.width = screenWidth/6-ImageUtils.dip2px(this, 5);
+		day6dIV.setLayoutParams(pd6);
+		LinearLayout.LayoutParams pn6 = (LayoutParams) day6nIV.getLayoutParams();
+		pn6.width = screenWidth/6-ImageUtils.dip2px(this, 5);
+		day6nIV.setLayoutParams(pn6);
+		
 	}
 	
 	@SuppressLint("HandlerLeak")
@@ -173,39 +402,77 @@ public class Home extends tools.BaseActivity implements AMapLocationListener, On
 			@Override
 			public void handleMessage(Message msg) {
 				if (msg.what == 1) {
-					datas.clear();
 					ForecastWeather weather = (ForecastWeather)msg.obj;
 					weatherTV.setText(weather.weather1);
-					SKWeather weather1 = new SKWeather();
-					weather1.temp = weather.temp1;
-					weather1.isRadar = weather.img1;
-					weather1.time = "今天";
-					datas.add(weather1);
-					SKWeather weather2 = new SKWeather();
-					weather2.temp = weather.temp2;
-					weather2.isRadar = weather.img3;
+					minMaxTV.setText(weather.temp1);
+					day1TV.setText("今天");
 					CalendarUtil day2 = new CalendarUtil(1);
-			        weather2.time = day2.getWeek(day2.getDay());
-					datas.add(weather2);
-					SKWeather weather3 = new SKWeather();
-					weather3.temp = weather.temp3;
-					weather3.isRadar = weather.img5;
+					day2TV.setText(day2.getWeek(day2.getDay()));
 					CalendarUtil day3 = new CalendarUtil(2);
-			        weather3.time = day3.getWeek(day3.getDay());
-					datas.add(weather3);
-					SKWeather weather4 = new SKWeather();
-					weather4.temp = weather.temp4;
-					weather4.isRadar = weather.img7;
+					day3TV.setText(day3.getWeek(day3.getDay()));
 					CalendarUtil day4 = new CalendarUtil(3);
-			        weather4.time = day4.getWeek(day4.getDay());
-					datas.add(weather4);
-					SKWeather weather5 = new SKWeather();
-					weather5.temp = weather.temp5;
-					weather5.isRadar = weather.img9;
+					day4TV.setText(day4.getWeek(day4.getDay()));
 					CalendarUtil day5 = new CalendarUtil(4);
-			        weather5.time = day5.getWeek(day5.getDay());
-					datas.add(weather5);
-					forecastAdapter.notifyDataSetChanged();
+					day5TV.setText(day5.getWeek(day5.getDay()));
+					CalendarUtil day6 = new CalendarUtil(5);
+					day6TV.setText(day6.getWeek(day6.getDay()));
+					
+					String cRegex         = "(.*)~(.*)";
+					Pattern pattern = Pattern.compile(cRegex);
+					Matcher matcher = pattern.matcher(weather.temp1);
+				   	if (matcher.find()) {
+				   		day1maxTV.setText(matcher.group(1));
+				   		day1minTV.setText(matcher.group(2));
+					}
+				   	
+				   	matcher = pattern.matcher(weather.temp2);
+				   	if (matcher.find()) {
+				   		day2maxTV.setText(matcher.group(1));
+				   		day2minTV.setText(matcher.group(2));
+					}
+				   	
+				   	matcher = pattern.matcher(weather.temp3);
+				   	if (matcher.find()) {
+				   		day3maxTV.setText(matcher.group(1));
+				   		day3minTV.setText(matcher.group(2));
+					}
+				   	
+				   	matcher = pattern.matcher(weather.temp4);
+				   	if (matcher.find()) {
+				   		day4maxTV.setText(matcher.group(1));
+				   		day4minTV.setText(matcher.group(2));
+					}
+				   	
+				   	matcher = pattern.matcher(weather.temp5);
+				   	if (matcher.find()) {
+				   		day5maxTV.setText(matcher.group(1));
+				   		day5minTV.setText(matcher.group(2));
+					}
+				   	
+				   	matcher = pattern.matcher(weather.temp6);
+				   	if (matcher.find()) {
+				   		day6maxTV.setText(matcher.group(1));
+				   		day6minTV.setText(matcher.group(2));
+					}
+				   	
+				   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img1+".gif", day1dIV, CommonValue.DisplayOptions.default_options);
+//				   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img2+".gif", day1nIV, CommonValue.DisplayOptions.default_options);
+				   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img3+".gif", day2dIV, CommonValue.DisplayOptions.default_options);
+//				   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img4+".gif", day2nIV, CommonValue.DisplayOptions.default_options);
+				   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img5+".gif", day3dIV, CommonValue.DisplayOptions.default_options);
+//				   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img6+".gif", day3nIV, CommonValue.DisplayOptions.default_options);
+				   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img7+".gif", day4dIV, CommonValue.DisplayOptions.default_options);
+//				   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img8+".gif", day4nIV, CommonValue.DisplayOptions.default_options);
+				   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img9+".gif", day5dIV, CommonValue.DisplayOptions.default_options);
+//				   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img10+".gif", day5nIV, CommonValue.DisplayOptions.default_options);
+				   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img11+".gif", day6dIV, CommonValue.DisplayOptions.default_options);
+//				   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img12+".gif", day6nIV, CommonValue.DisplayOptions.default_options);
+				   	
+				   	clothTV.setText(weather.index);
+					lineTV.setText(weather.index_uv);
+					sportTV.setText(weather.index_co);
+					carTV.setText(weather.index_xc);
+					tripTV.setText(weather.index_tr);
 				} 
 				else {
 					((AppException)msg.obj).makeToast(Home.this);
@@ -325,7 +592,7 @@ public class Home extends tools.BaseActivity implements AMapLocationListener, On
 			mAMapLocManager.removeUpdates(this);
 		}
 		else {
-			UIHelper.ToastMessage(this, "网络不给力哦，请往下拉再试试");
+			UIHelper.ToastMessage(this, "网络不给力哦，请往下拉再试试", Toast.LENGTH_SHORT);
 			mPullToRefreshView.onHeaderRefreshComplete();
 		}
 	}
@@ -337,7 +604,12 @@ public class Home extends tools.BaseActivity implements AMapLocationListener, On
 
 	@Override
 	public void onHeaderRefresh(PullToRefreshView view) {
-		mAMapLocManager.requestLocationUpdates(
-				LocationProviderProxy.AMapNetwork, 1000, 10, this);
+		if(!appContext.isNetworkConnected()) {
+        	UIHelper.ToastMessage(this, R.string.network_not_connected, Toast.LENGTH_SHORT);
+        	mPullToRefreshView.onHeaderRefreshComplete();
+        }
+		else {
+			mAMapLocManager.requestLocationUpdates(LocationProviderProxy.AMapNetwork, 1000, 10, this);
+		}
 	}
 }

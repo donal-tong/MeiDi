@@ -37,7 +37,7 @@ import tools.CalendarUtil;
 import tools.HttpUtil;
 import tools.Logger;
 
-public class Wash extends BaseActivity{
+public class Wash extends AppActivity{
 	private TextView dayTV;
 	private TextView tempTV;
 	private TextView wetTV;
