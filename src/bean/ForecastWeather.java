@@ -1,11 +1,14 @@
 package bean;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import tools.AppException;
+import tools.CalendarUtil;
 
 public class ForecastWeather extends Entity{
 	public String city;//: "番禺",
@@ -92,48 +95,27 @@ public class ForecastWeather extends Entity{
 	public String index_ls;
 	public String index_ag;
 	
+	public String day1;
+	public String day2;
+	public String day3;
+	public String day4;
+	public String day5;
+	public String day6;
 	
+	public String day1max;
+	public String day2max;
+	public String day3max;
+	public String day4max;
+	public String day5max;
+	public String day6max;
 	
-	@Override
-	public String toString() {
-		return "ForecastWeather [city=" + city + ", city_en=" + city_en
-				+ ", date_y=" + date_y + ", date=" + date + ", week=" + week
-				+ ", fchh=" + fchh + ", cityid=" + cityid + ", temp1=" + temp1
-				+ ", temp2=" + temp2 + ", temp3=" + temp3 + ", temp4=" + temp4
-				+ ", temp5=" + temp5 + ", temp6=" + temp6 + ", tempF1="
-				+ tempF1 + ", tempF2=" + tempF2 + ", tempF3=" + tempF3
-				+ ", tempF4=" + tempF4 + ", tempF5=" + tempF5 + ", tempF6="
-				+ tempF6 + ", weather1=" + weather1 + ", weather2=" + weather2
-				+ ", weather3=" + weather3 + ", weather4=" + weather4
-				+ ", weather5=" + weather5 + ", weather6=" + weather6
-				+ ", img1=" + img1 + ", img2=" + img2 + ", img3=" + img3
-				+ ", img4=" + img4 + ", img5=" + img5 + ", img6=" + img6
-				+ ", img7=" + img7 + ", img8=" + img8 + ", img9=" + img9
-				+ ", img10=" + img10 + ", img11=" + img11 + ", img12=" + img12
-				+ ", img_single=" + img_single + ", img_title1=" + img_title1
-				+ ", img_title2=" + img_title2 + ", img_title3=" + img_title3
-				+ ", img_title4=" + img_title4 + ", img_title5=" + img_title5
-				+ ", img_title6=" + img_title6 + ", img_title7=" + img_title7
-				+ ", img_title8=" + img_title8 + ", img_title9=" + img_title9
-				+ ", img_title10=" + img_title10 + ", img_title11="
-				+ img_title11 + ", img_title12=" + img_title12
-				+ ", img_title_single=" + img_title_single + ", wind1=" + wind1
-				+ ", wind2=" + wind2 + ", wind3=" + wind3 + ", wind4=" + wind4
-				+ ", wind5=" + wind5 + ", wind6=" + wind6 + ", fx1=" + fx1
-				+ ", fx2=" + fx2 + ", fl1=" + fl1 + ", fl2=" + fl2 + ", fl3="
-				+ fl3 + ", fl4=" + fl4 + ", fl5=" + fl5 + ", fl6=" + fl6
-				+ ", index=" + index + ", index_d=" + index_d + ", index48="
-				+ index48 + ", index48_d=" + index48_d + ", index_uv="
-				+ index_uv + ", index48_uv=" + index48_uv + ", index_xc="
-				+ index_xc + ", index_tr=" + index_tr + ", index_co="
-				+ index_co + ", st1=" + st1 + ", st2=" + st2 + ", st3=" + st3
-				+ ", st4=" + st4 + ", st5=" + st5 + ", st6=" + st6
-				+ ", index_cl=" + index_cl + ", index_ls=" + index_ls
-				+ ", index_ag=" + index_ag + "]";
-	}
-
-
-
+	public String day1min;
+	public String day2min;
+	public String day3min;
+	public String day4min;
+	public String day5min;
+	public String day6min;
+	
 	public static ForecastWeather pase(String res) throws IOException, AppException {
 		ForecastWeather weather = new ForecastWeather();
 		try {
@@ -184,6 +166,56 @@ public class ForecastWeather extends Entity{
 			weather.index_co = object.getString("index_co");
 			weather.index_xc = object.getString("index_xc");
 			weather.index_tr = object.getString("index_tr");
+			
+			String cRegex         = "(.*)℃~(.*)℃";
+			Pattern pattern = Pattern.compile(cRegex);
+			Matcher matcher = pattern.matcher(weather.temp1);
+		   	if (matcher.find()) {
+		   		weather.day1max = matcher.group(1);
+		   		weather.day1min = matcher.group(2);
+			}
+		   	
+		   	matcher = pattern.matcher(weather.temp2);
+		   	if (matcher.find()) {
+		   		weather.day2max = matcher.group(1);
+		   		weather.day2min = matcher.group(2);
+			}
+		   	
+		   	matcher = pattern.matcher(weather.temp3);
+		   	if (matcher.find()) {
+		   		weather.day3max = matcher.group(1);
+		   		weather.day3min = matcher.group(2);
+			}
+		   	
+		   	matcher = pattern.matcher(weather.temp4);
+		   	if (matcher.find()) {
+		   		weather.day4max = matcher.group(1);
+		   		weather.day4min = matcher.group(2);
+			}
+		   	
+		   	matcher = pattern.matcher(weather.temp5);
+		   	if (matcher.find()) {
+		   		weather.day5max = matcher.group(1);
+		   		weather.day5min = matcher.group(2);
+			}
+		   	
+		   	matcher = pattern.matcher(weather.temp6);
+		   	if (matcher.find()) {
+		   		weather.day6max = matcher.group(1);
+		   		weather.day6min = matcher.group(2);
+			}
+		   	
+		   	weather.day1 = "今天";
+			CalendarUtil day2 = new CalendarUtil(1);
+		   	weather.day2 = day2.getWeek(day2.getDay());
+			CalendarUtil day3 = new CalendarUtil(2);
+		   	weather.day3 = day3.getWeek(day3.getDay());
+			CalendarUtil day4 = new CalendarUtil(3);
+		   	weather.day4 = (day4.getWeek(day4.getDay()));
+			CalendarUtil day5 = new CalendarUtil(4);
+		   	weather.day5 = (day5.getWeek(day5.getDay()));
+			CalendarUtil day6 = new CalendarUtil(5);
+		   	weather.day6 = (day6.getWeek(day6.getDay()));
 		} catch (JSONException e) {
 			throw AppException.json(e);
 		}

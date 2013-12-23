@@ -14,15 +14,17 @@
 	        android:layout_height="160dp"  
 	   		android:layout_width="160dp" 
 	   		android:layout_gravity="right"
-	   		android:src="@drawable/default_robot"
+	   		android:background="@drawable/qing0001"
 	   		android:scaleType="centerCrop"
 	   		android:layout_marginRight="10dp"
         />
-        <LinearLayout 
+        <LinearLayout
+            android:id="@+id/weatherInfoView" 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:background="@color/weather_background_color"
+            android:visibility="invisible"
             >
 	        <RelativeLayout 
 	            android:id="@+id/contentLayout"

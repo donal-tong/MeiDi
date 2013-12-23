@@ -1,9 +1,6 @@
 package ui;
 
 import java.util.Calendar;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import tools.AppException;
 import tools.CalendarUtil;
 import tools.DBHelper;
@@ -16,6 +13,7 @@ import widget.PullToRefreshView;
 import widget.PullToRefreshView.OnFooterRefreshListener;
 import widget.PullToRefreshView.OnHeaderRefreshListener;
 
+import bean.Entity;
 import bean.ForecastWeather;
 import bean.SKWeather;
 
@@ -27,12 +25,15 @@ import com.vikaa.meidi.R;
 
 import config.ApiClent;
 import config.CommonValue;
+import config.WeatherClient;
+import config.WeatherClient.ClientCallback;
 
 import adapter.HomeAdapter;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
+import android.graphics.drawable.AnimationDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -47,7 +48,9 @@ import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 
 public class Home extends AppActivity implements AMapLocationListener, OnHeaderRefreshListener, OnFooterRefreshListener{
+	private RelativeLayout homeBg;
 	private LocationManagerProxy mAMapLocManager = null;
+	private LinearLayout weatherInfoView;
 	private View header;
 	private TextView locationTV;
 	private TextView tempTV;
@@ -99,9 +102,6 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 	private ImageView day6dIV;
 	private ImageView day6nIV;
 	
-//	private ListView forecastListView;
-//	private ForecastAdapter forecastAdapter;
-//	private List<SKWeather> datas = new ArrayList<SKWeather>();
 	private PullToRefreshView mPullToRefreshView;
 	private ListView mListView;
 	
@@ -144,6 +144,7 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 	}
 	
 	private void setUI() {
+		homeBg = (RelativeLayout) findViewById(R.id.homebg);
 		mPullToRefreshView = (PullToRefreshView)findViewById(R.id.main_pull_refresh_view);
 		mPullToRefreshView.mHeaderTextView.setTextColor(getResources().getColor(R.color.white));
 		mPullToRefreshView.setOnFooterRefreshListener(this);
@@ -151,6 +152,7 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 		mListView = (ListView) findViewById(R.id.mlistView);
 		mListView.setDividerHeight(0);
 		header = getLayoutInflater().inflate(R.layout.home_head, null);
+		weatherInfoView = (LinearLayout) header.findViewById(R.id.weatherInfoView);
 		LinearLayout contentView = (LinearLayout) header.findViewById(R.id.contentView);
 		RelativeLayout.LayoutParams p = (RelativeLayout.LayoutParams) contentView.getLayoutParams();
 		p.height = 2*ImageUtils.getDisplayHeighth(this);
@@ -185,10 +187,6 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 		LinearLayout.LayoutParams p3 = (LayoutParams) wetTV.getLayoutParams();
 		p3.width = w/3;
 		wetTV.setLayoutParams(p3);
-//		forecastListView = (ListView) header.findViewById(R.id.listView);
-//		forecastListView.setDividerHeight(0);
-//		forecastAdapter = new ForecastAdapter(this, datas);
-//		forecastListView.setAdapter(forecastAdapter);
 		initIndexUI();
 		initWeekWeatherUI();
 		mListView.addHeaderView(header, null, false);
@@ -349,6 +347,7 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 		
 	}
 	
+	
 	@SuppressLint("HandlerLeak")
 	public void initWaetherData(final String cityName) {
 		final Handler handler = new Handler() {
@@ -356,6 +355,7 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 			public void handleMessage(Message msg) {
 				if (msg.what == 1) {
 					String cityCode = (String)msg.obj;
+					getWeatherFromCache(cityCode);
 					querySKWeather(cityCode);
 					forecastWeather(cityCode);
 				} else {
@@ -386,7 +386,6 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 					msg.what = 1;
 					msg.obj = cityCode;
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					msg.what = -1;
 					msg.obj = e;
@@ -396,104 +395,126 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 		}).start();
 	}
 	
-	@SuppressLint("HandlerLeak")
+	private void getWeatherFromCache(String cityCode) {
+		String key = String.format("%s-%s", "weather", cityCode);
+		SKWeather entity = (SKWeather) appContext.readObject(key);
+		if(entity != null){
+			handleDayWeather(entity);
+		}
+		
+		String key1 = String.format("%s-%s", "weekweather", cityCode);
+		ForecastWeather entity1 = (ForecastWeather) appContext.readObject(key1);
+		if(entity1 != null){
+			handlerWeekWeather(entity1);
+		}
+	}
+	
 	private void forecastWeather(final String cityCode) {
-		final Handler mhandler = new Handler() {
+		WeatherClient.forcastWeather(appContext, cityCode, new ClientCallback() {
+			
 			@Override
-			public void handleMessage(Message msg) {
-				if (msg.what == 1) {
-					ForecastWeather weather = (ForecastWeather)msg.obj;
-					weatherTV.setText(weather.weather1);
-					minMaxTV.setText(weather.temp1);
-					day1TV.setText("今天");
-					CalendarUtil day2 = new CalendarUtil(1);
-					day2TV.setText(day2.getWeek(day2.getDay()));
-					CalendarUtil day3 = new CalendarUtil(2);
-					day3TV.setText(day3.getWeek(day3.getDay()));
-					CalendarUtil day4 = new CalendarUtil(3);
-					day4TV.setText(day4.getWeek(day4.getDay()));
-					CalendarUtil day5 = new CalendarUtil(4);
-					day5TV.setText(day5.getWeek(day5.getDay()));
-					CalendarUtil day6 = new CalendarUtil(5);
-					day6TV.setText(day6.getWeek(day6.getDay()));
-					
-					String cRegex         = "(.*)~(.*)";
-					Pattern pattern = Pattern.compile(cRegex);
-					Matcher matcher = pattern.matcher(weather.temp1);
-				   	if (matcher.find()) {
-				   		day1maxTV.setText(matcher.group(1));
-				   		day1minTV.setText(matcher.group(2));
-					}
-				   	
-				   	matcher = pattern.matcher(weather.temp2);
-				   	if (matcher.find()) {
-				   		day2maxTV.setText(matcher.group(1));
-				   		day2minTV.setText(matcher.group(2));
-					}
-				   	
-				   	matcher = pattern.matcher(weather.temp3);
-				   	if (matcher.find()) {
-				   		day3maxTV.setText(matcher.group(1));
-				   		day3minTV.setText(matcher.group(2));
-					}
-				   	
-				   	matcher = pattern.matcher(weather.temp4);
-				   	if (matcher.find()) {
-				   		day4maxTV.setText(matcher.group(1));
-				   		day4minTV.setText(matcher.group(2));
-					}
-				   	
-				   	matcher = pattern.matcher(weather.temp5);
-				   	if (matcher.find()) {
-				   		day5maxTV.setText(matcher.group(1));
-				   		day5minTV.setText(matcher.group(2));
-					}
-				   	
-				   	matcher = pattern.matcher(weather.temp6);
-				   	if (matcher.find()) {
-				   		day6maxTV.setText(matcher.group(1));
-				   		day6minTV.setText(matcher.group(2));
-					}
-				   	
-				   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img1+".gif", day1dIV, CommonValue.DisplayOptions.default_options);
-//				   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img2+".gif", day1nIV, CommonValue.DisplayOptions.default_options);
-				   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img3+".gif", day2dIV, CommonValue.DisplayOptions.default_options);
-//				   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img4+".gif", day2nIV, CommonValue.DisplayOptions.default_options);
-				   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img5+".gif", day3dIV, CommonValue.DisplayOptions.default_options);
-//				   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img6+".gif", day3nIV, CommonValue.DisplayOptions.default_options);
-				   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img7+".gif", day4dIV, CommonValue.DisplayOptions.default_options);
-//				   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img8+".gif", day4nIV, CommonValue.DisplayOptions.default_options);
-				   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img9+".gif", day5dIV, CommonValue.DisplayOptions.default_options);
-//				   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img10+".gif", day5nIV, CommonValue.DisplayOptions.default_options);
-				   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img11+".gif", day6dIV, CommonValue.DisplayOptions.default_options);
-//				   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img12+".gif", day6nIV, CommonValue.DisplayOptions.default_options);
-				   	
-				   	clothTV.setText(weather.index);
-					lineTV.setText(weather.index_uv);
-					sportTV.setText(weather.index_co);
-					carTV.setText(weather.index_xc);
-					tripTV.setText(weather.index_tr);
-				} 
-				else {
-					((AppException)msg.obj).makeToast(Home.this);
+			public void onSuccess(Entity data) {
+				ForecastWeather weather = (ForecastWeather)data;
+				if (weather != null) {
+					handlerWeekWeather(weather);
 				}
 				mPullToRefreshView.onHeaderRefreshComplete();
 			}
-		};
-		new Thread() {
-			public void run() {
-				Message msg = new Message();
-				try {
-					ForecastWeather weather = ApiClent.forcastWeather(appContext, cityCode);
-					msg.what = 1;
-					msg.obj = weather;
-				} catch (Exception e) {
-					msg.what = -1;
-					msg.obj = e;
-				}
-				mhandler.sendMessage(msg);
-			};
-		}.start();
+			
+			@Override
+			public void onFailure(String message) {
+				mPullToRefreshView.onHeaderRefreshComplete();
+			}
+			
+			@Override
+			public void onError(Exception e) {
+				mPullToRefreshView.onHeaderRefreshComplete();
+				((AppException)e).makeToast(Home.this);
+			}
+		});
+	}
+	
+	private void handlerWeekWeather(ForecastWeather weather) {
+		weatherInfoView.setVisibility(View.VISIBLE);
+		weatherTV.setText(weather.weather1);
+		handleWeatherAnimation(weather.weather1);
+		minMaxTV.setText(weather.temp1);
+		day1TV.setText(weather.day1);
+		day2TV.setText(weather.day2);
+		day3TV.setText(weather.day3);
+		day4TV.setText(weather.day4);
+		day5TV.setText(weather.day5);
+		day6TV.setText(weather.day6);
+   		day1maxTV.setText(weather.day1max+"℃");
+   		day1minTV.setText(weather.day1min+"℃");
+   		day2maxTV.setText(weather.day2max+"℃");
+   		day2minTV.setText(weather.day2min+"℃");
+   		day3maxTV.setText(weather.day3max+"℃");
+   		day3minTV.setText(weather.day3min+"℃");
+   		day4maxTV.setText(weather.day4max+"℃");
+   		day4minTV.setText(weather.day4min+"℃");
+   		day5maxTV.setText(weather.day5max+"℃");
+   		day5minTV.setText(weather.day5min+"℃");
+   		day6maxTV.setText(weather.day6max+"℃");
+   		day6minTV.setText(weather.day6min+"℃");
+	   	
+	   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img1+".gif", day1dIV, CommonValue.DisplayOptions.default_options);
+//	   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img2+".gif", day1nIV, CommonValue.DisplayOptions.default_options);
+	   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img3+".gif", day2dIV, CommonValue.DisplayOptions.default_options);
+//	   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img4+".gif", day2nIV, CommonValue.DisplayOptions.default_options);
+	   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img5+".gif", day3dIV, CommonValue.DisplayOptions.default_options);
+//	   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img6+".gif", day3nIV, CommonValue.DisplayOptions.default_options);
+	   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img7+".gif", day4dIV, CommonValue.DisplayOptions.default_options);
+//	   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img8+".gif", day4nIV, CommonValue.DisplayOptions.default_options);
+	   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img9+".gif", day5dIV, CommonValue.DisplayOptions.default_options);
+//	   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img10+".gif", day5nIV, CommonValue.DisplayOptions.default_options);
+	   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img11+".gif", day6dIV, CommonValue.DisplayOptions.default_options);
+//	   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img12+".gif", day6nIV, CommonValue.DisplayOptions.default_options);
+	   	
+	   	clothTV.setText(weather.index);
+		lineTV.setText(weather.index_uv);
+		sportTV.setText(weather.index_co);
+		carTV.setText(weather.index_xc);
+		tripTV.setText(weather.index_tr);
+	}
+	
+	private void handleWeatherAnimation(String weather) {
+		homeBg.setBackgroundResource(R.drawable.day_rain_01);
+		if (weather.indexOf("晴") != -1) {
+			homeBg.setBackgroundResource(R.drawable.day_sunny_01);
+			defaultImageView.setBackgroundResource(R.anim.qing);
+			AnimationDrawable anim = null;
+	        Object ob = defaultImageView.getBackground();
+	        anim = (AnimationDrawable) ob;
+	        anim.stop();
+	        anim.start();
+		}
+		else if (weather.indexOf("风") != -1) {
+			defaultImageView.setBackgroundResource(R.anim.feng);
+			AnimationDrawable anim = null;
+	        Object ob = defaultImageView.getBackground();
+	        anim = (AnimationDrawable) ob;
+	        anim.stop();
+	        anim.start();
+		}
+		else if (weather.indexOf("雪") != -1) {
+			homeBg.setBackgroundResource(R.drawable.day_snow_01);
+			defaultImageView.setBackgroundResource(R.anim.xue);
+			AnimationDrawable anim = null;
+	        Object ob = defaultImageView.getBackground();
+	        anim = (AnimationDrawable) ob;
+	        anim.stop();
+	        anim.start();
+		}
+		else if (weather.indexOf("雨") != -1) {
+			homeBg.setBackgroundResource(R.drawable.day_rain_01);
+			defaultImageView.setBackgroundResource(R.anim.yu);
+			AnimationDrawable anim = null;
+	        Object ob = defaultImageView.getBackground();
+	        anim = (AnimationDrawable) ob;
+	        anim.stop();
+	        anim.start();
+		}
 	}
 	
 	private void notiWeather(SKWeather weather) {
@@ -503,50 +524,47 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 		sendBroadcast(intent);
 	}
 	
-	@SuppressLint("HandlerLeak")
 	private void querySKWeather(final String cityCode) {
-		final Handler mhandler = new Handler() {
+		WeatherClient.getSKWeather(appContext, cityCode, new ClientCallback() {
 			@Override
-			public void handleMessage(Message msg) {
-				if (msg.what == 1) {
-					SKWeather weather = (SKWeather)msg.obj;
-					tempTV.setText(weather.temp);
-					windTV.setText(weather.WD+""+weather.WS);
-					wetTV.setText("湿度"+weather.SD);
-					cImageView.setVisibility(View.VISIBLE);
-					weatherTV.setVisibility(View.VISIBLE);
-					Calendar calendar = Calendar.getInstance();
-					Lunar lunar = new Lunar(calendar);  
-					String lunarStr = "";  
-					lunarStr +=lunar.cyclical()+"年";  
-					lunarStr +=lunar.toString();  
-					CalendarUtil day = new CalendarUtil(0);
-					dayTV.setText(day.Date2String(day.getDay(),"yyyy年M月d日"));
-					lunarTV.setText(lunarStr);
-					notiWeather(weather);
-				} 
-				else {
-					((AppException)msg.obj).makeToast(Home.this);
+			public void onSuccess(Entity data) {
+				SKWeather weather = (SKWeather) data;
+				if (weather != null) {
+					handleDayWeather(weather);
 				}
 				mPullToRefreshView.onHeaderRefreshComplete();
 			}
-		};
-		new Thread() {
-			public void run() {
-				Message msg = new Message();
-				try {
-					SKWeather weather = ApiClent.getSKWeather(appContext, cityCode);
-					msg.what = 1;
-					msg.obj = weather;
-				} catch (Exception e) {
-					msg.what = -1;
-					msg.obj = e;
-				}
-				mhandler.sendMessage(msg);
-			};
-		}.start();
+			
+			@Override
+			public void onFailure(String message) {
+				mPullToRefreshView.onHeaderRefreshComplete();
+			}
+			
+			@Override
+			public void onError(Exception e) {
+				((AppException)e).makeToast(Home.this);
+				mPullToRefreshView.onHeaderRefreshComplete();
+			}
+		});
 	}
-
+	
+	private void handleDayWeather(SKWeather weather) {
+		tempTV.setText(weather.temp);
+		windTV.setText(weather.WD+""+weather.WS);
+		wetTV.setText("湿度"+weather.SD);
+		cImageView.setVisibility(View.VISIBLE);
+		weatherTV.setVisibility(View.VISIBLE);
+		Calendar calendar = Calendar.getInstance();
+		Lunar lunar = new Lunar(calendar);  
+		String lunarStr = "";  
+		lunarStr +=lunar.cyclical()+"年";  
+		lunarStr +=lunar.toString();  
+		CalendarUtil day = new CalendarUtil(0);
+		dayTV.setText(day.Date2String(day.getDay(),"yyyy年M月d日"));
+		lunarTV.setText(lunarStr);
+		notiWeather(weather);
+	}
+	
 	@Override
 	public void onLocationChanged(Location arg0) {
 		Logger.i("asdf");
@@ -609,6 +627,8 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
         	mPullToRefreshView.onHeaderRefreshComplete();
         }
 		else {
+			defaultImageView.clearAnimation();
+			defaultImageView.setBackgroundResource(R.drawable.qing0001);
 			mAMapLocManager.requestLocationUpdates(LocationProviderProxy.AMapNetwork, 1000, 10, this);
 		}
 	}
