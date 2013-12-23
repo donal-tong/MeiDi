@@ -15,6 +15,12 @@ public class WeatherClient {
     	appContext.saveObject(entity, key);
     }
     
+    public interface ClientCallback{
+        abstract void onSuccess(Entity data);
+        abstract void onFailure(String message);
+        abstract void onError(Exception e);
+    }
+    
     public static void getSKWeather(final MeiDiApp appContext, final String cityCode, final ClientCallback callback) {
     	QYRestClient.get("http://www.weather.com.cn/data/sk/"+cityCode+".html", null, new AsyncHttpResponseHandler() {
 			
@@ -58,9 +64,26 @@ public class WeatherClient {
 		});
     }
     
-    public interface ClientCallback{
-        abstract void onSuccess(Entity data);
-        abstract void onFailure(String message);
-        abstract void onError(Exception e);
+    public static void forcastWeatherhtml(final MeiDiApp appContext, final String cityCode, final ClientCallback callback) {
+    	QYRestClient.get("http://www.weather.com.cn/weather/"+cityCode+".shtml", null, new AsyncHttpResponseHandler() {
+			
+			@Override
+			public void onSuccess(int arg0, Header[] arg1, byte[] content) {
+				Logger.i(new String(content));
+				try{
+//					ForecastWeather data = ForecastWeather.pase(new String(content));
+//					callback.onSuccess(data);
+//					saveCache(appContext, "weekweather-"+cityCode, data);
+				}catch (Exception e) {
+					callback.onError(e);
+				}
+			}
+			
+			@Override
+			public void onFailure(int arg0, Header[] arg1, byte[] arg2, Throwable arg3) {
+				Logger.i(new String(arg2));
+			}
+		});
     }
+    
 }

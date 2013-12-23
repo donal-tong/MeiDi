@@ -432,6 +432,26 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 				((AppException)e).makeToast(Home.this);
 			}
 		});
+		WeatherClient.forcastWeatherhtml(appContext, cityCode, new ClientCallback() {
+			
+			@Override
+			public void onSuccess(Entity data) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onFailure(String message) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onError(Exception e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 	}
 	
 	private void handlerWeekWeather(ForecastWeather weather) {
