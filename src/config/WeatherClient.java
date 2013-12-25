@@ -1,5 +1,8 @@
 package config;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.http.Header;
 
 import tools.Logger;
@@ -7,6 +10,7 @@ import tools.Logger;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import bean.Entity;
 import bean.ForecastWeather;
+import bean.IndexEntity;
 import bean.SKWeather;
 
 public class WeatherClient {
@@ -69,19 +73,20 @@ public class WeatherClient {
 			
 			@Override
 			public void onSuccess(int arg0, Header[] arg1, byte[] content) {
-				Logger.i(new String(content));
-				try{
-//					ForecastWeather data = ForecastWeather.pase(new String(content));
-//					callback.onSuccess(data);
-//					saveCache(appContext, "weekweather-"+cityCode, data);
-				}catch (Exception e) {
-					callback.onError(e);
+				String s = new String(content);
+				s = s.replaceAll("(\n|\r\n)\\s+", "");
+				String regex = "<section class=\"detail pp\"><aside><b>(.*?)</b>(.*?)</aside>.*</section>";
+				Pattern pa = Pattern.compile(regex);
+				Matcher m = pa.matcher(s);
+				if (m.find()) {
+					IndexEntity index = new IndexEntity();
+					index.makeupValue = m.group(1);
+					callback.onSuccess(index);
 				}
 			}
 			
 			@Override
 			public void onFailure(int arg0, Header[] arg1, byte[] arg2, Throwable arg3) {
-				Logger.i(new String(arg2));
 			}
 		});
     }

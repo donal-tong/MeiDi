@@ -15,6 +15,7 @@ import widget.PullToRefreshView.OnHeaderRefreshListener;
 
 import bean.Entity;
 import bean.ForecastWeather;
+import bean.IndexEntity;
 import bean.SKWeather;
 
 import com.amap.api.location.AMapLocation;
@@ -436,19 +437,17 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 			
 			@Override
 			public void onSuccess(Entity data) {
-				// TODO Auto-generated method stub
-				
+				IndexEntity index = (IndexEntity) data;
+				cleanupTV.setText(index.makeupValue);
 			}
 			
 			@Override
 			public void onFailure(String message) {
-				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
 			public void onError(Exception e) {
-				// TODO Auto-generated method stub
 				
 			}
 		});
