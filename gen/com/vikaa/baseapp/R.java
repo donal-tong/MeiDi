@@ -109,31 +109,31 @@ public final class R {
 		public static final int clearwords_bg_nor = 0x7f02000b;
 		public static final int clearwords_bg_sel = 0x7f02000c;
 		public static final int clearwords_icon = 0x7f02000d;
-		public static final int ic_launcher = 0x7f02001b;
-		public static final int ic_pulltorefresh_arrow = 0x7f02001c;
-		public static final int loading_page_loading0 = 0x7f020020;
-		public static final int loading_page_loading1 = 0x7f020021;
-		public static final int loading_page_loading2 = 0x7f020022;
-		public static final int loading_page_loading3 = 0x7f020023;
-		public static final int nav_refresh = 0x7f020040;
-		public static final int new_data_toast = 0x7f020041;
-		public static final int refreshlistview_arrow = 0x7f020051;
-		public static final int review_bg_blue = 0x7f020052;
+		public static final int ic_launcher = 0x7f020027;
+		public static final int ic_pulltorefresh_arrow = 0x7f020028;
+		public static final int loading_page_loading0 = 0x7f02002c;
+		public static final int loading_page_loading1 = 0x7f02002d;
+		public static final int loading_page_loading2 = 0x7f02002e;
+		public static final int loading_page_loading3 = 0x7f02002f;
+		public static final int nav_refresh = 0x7f02004c;
+		public static final int new_data_toast = 0x7f02004d;
+		public static final int refreshlistview_arrow = 0x7f02005d;
+		public static final int review_bg_blue = 0x7f02005e;
 	}
 	public static final class id {
-		public static final int arrow = 0x7f0b0048;
-		public static final int comment = 0x7f0b004a;
-		public static final int date = 0x7f0b004b;
-		public static final int head_arrowImageView = 0x7f0b004c;
-		public static final int header = 0x7f0b0047;
-		public static final int listview_head_loading = 0x7f0b004d;
-		public static final int progress = 0x7f0b0049;
-		public static final int pull_to_load_text = 0x7f0b0050;
-		public static final int pull_to_refresh_header = 0x7f0b004e;
-		public static final int pull_to_refresh_text = 0x7f0b0051;
-		public static final int pull_to_refresh_updated_at = 0x7f0b0052;
-		public static final int refreshIV = 0x7f0b004f;
-		public static final int tv = 0x7f0b005a;
+		public static final int arrow = 0x7f0b0049;
+		public static final int comment = 0x7f0b004b;
+		public static final int date = 0x7f0b004c;
+		public static final int head_arrowImageView = 0x7f0b004d;
+		public static final int header = 0x7f0b0048;
+		public static final int listview_head_loading = 0x7f0b004e;
+		public static final int progress = 0x7f0b004a;
+		public static final int pull_to_load_text = 0x7f0b0051;
+		public static final int pull_to_refresh_header = 0x7f0b004f;
+		public static final int pull_to_refresh_text = 0x7f0b0052;
+		public static final int pull_to_refresh_updated_at = 0x7f0b0053;
+		public static final int refreshIV = 0x7f0b0050;
+		public static final int tv = 0x7f0b005b;
 	}
 	public static final class layout {
 		public static final int layout_refreshlistview_header = 0x7f030002;

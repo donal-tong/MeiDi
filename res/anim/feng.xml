@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <animation-list android:oneshot="false"
 	xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:duration="500" android:drawable="@drawable/feng1" />
-	<item android:duration="500" android:drawable="@drawable/feng2" />
+	<item android:duration="100" android:drawable="@drawable/feng0001" />
+	<item android:duration="100" android:drawable="@drawable/feng0002" />
+	<item android:duration="100" android:drawable="@drawable/feng0003" />
+	<item android:duration="100" android:drawable="@drawable/feng0004" />
+	<item android:duration="100" android:drawable="@drawable/feng0005" />
+	<item android:duration="100" android:drawable="@drawable/feng0006" />
+	<item android:duration="100" android:drawable="@drawable/feng0007" />
+	<item android:duration="100" android:drawable="@drawable/feng0008" />
+	<item android:duration="100" android:drawable="@drawable/feng0009" />
+	<item android:duration="100" android:drawable="@drawable/feng0010" />
+	<item android:duration="100" android:drawable="@drawable/feng0011" />
+	<item android:duration="100" android:drawable="@drawable/feng0012" />
+	<item android:duration="100" android:drawable="@drawable/feng0013" />
+	<item android:duration="100" android:drawable="@drawable/feng0014" />
+	<item android:duration="100" android:drawable="@drawable/feng0001" />
+	<item android:duration="100" android:drawable="@drawable/feng0002" />
+	<item android:duration="100" android:drawable="@drawable/feng0003" />
+	<item android:duration="100" android:drawable="@drawable/feng0004" />
+	<item android:duration="100" android:drawable="@drawable/feng0005" />
+	<item android:duration="100" android:drawable="@drawable/feng0006" />
+	<item android:duration="100" android:drawable="@drawable/feng0007" />
+	<item android:duration="100" android:drawable="@drawable/feng0008" />
+	<item android:duration="100" android:drawable="@drawable/feng0009" />
+	<item android:duration="100" android:drawable="@drawable/feng0010" />
+	<item android:duration="100" android:drawable="@drawable/feng0011" />
+	<item android:duration="100" android:drawable="@drawable/feng0012" />
+	<item android:duration="100" android:drawable="@drawable/feng0013" />
+	<item android:duration="100" android:drawable="@drawable/feng0014" />
 </animation-list> 

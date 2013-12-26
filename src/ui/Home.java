@@ -1,6 +1,9 @@
 package ui;
 
 import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import tools.AppException;
 import tools.CalendarUtil;
 import tools.DBHelper;
@@ -103,11 +106,15 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 	private ImageView day6dIV;
 	private ImageView day6nIV;
 	
+	private LinearLayout wuranLayout;
+	
 	private PullToRefreshView mPullToRefreshView;
 	private ListView mListView;
 	
 	private int screenWidth;
 	
+	private AnimationDrawable anim = null;
+	Timer timer = new Timer();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -171,6 +178,7 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 		lunarTV.setTypeface(face);
 		cImageView = (ImageView) header.findViewById(R.id.cImageView);
 		defaultImageView = (ImageView) header.findViewById(R.id.defaultImageView);
+		wuranLayout = (LinearLayout) header.findViewById(R.id.wuranLayout);
 		
 		minMaxTV = (TextView) header.findViewById(R.id.minMaxTV);
 		minMaxTV.setTypeface(face);
@@ -195,6 +203,7 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 	}
 	
 	private void initIndexUI() {
+		
 		RelativeLayout clothView = (RelativeLayout) header.findViewById(R.id.clothView);
 		RelativeLayout.LayoutParams pc = (RelativeLayout.LayoutParams) clothView.getLayoutParams();
 		pc.width = (ImageUtils.getDisplayWidth(this)-ImageUtils.dip2px(this, 26))/2;
@@ -429,8 +438,9 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 			
 			@Override
 			public void onError(Exception e) {
+				Logger.i(e);
 				mPullToRefreshView.onHeaderRefreshComplete();
-				((AppException)e).makeToast(Home.this);
+//				((AppException)e).makeToast(Home.this);
 			}
 		});
 		WeatherClient.forcastWeatherhtml(appContext, cityCode, new ClientCallback() {
@@ -498,43 +508,86 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 	}
 	
 	private void handleWeatherAnimation(String weather) {
-		homeBg.setBackgroundResource(R.drawable.day_rain_01);
-		if (weather.indexOf("晴") != -1) {
-			homeBg.setBackgroundResource(R.drawable.day_sunny_01);
-			defaultImageView.setBackgroundResource(R.anim.qing);
-			AnimationDrawable anim = null;
-	        Object ob = defaultImageView.getBackground();
-	        anim = (AnimationDrawable) ob;
-	        anim.stop();
-	        anim.start();
-		}
-		else if (weather.indexOf("风") != -1) {
+//		homeBg.setBackgroundResource(R.drawable.day_rain_01);
+//		if (weather.indexOf("晴") != -1) {
+			homeBg.setBackgroundResource(R.drawable.feng0001);
 			defaultImageView.setBackgroundResource(R.anim.feng);
-			AnimationDrawable anim = null;
 	        Object ob = defaultImageView.getBackground();
 	        anim = (AnimationDrawable) ob;
+	        anim.setOneShot(true);
 	        anim.stop();
 	        anim.start();
+//		}
+//		else if (weather.indexOf("风") != -1) {
+////			homeBg.setBackgroundResource(R.drawable.day_sunny_01);
+//			defaultImageView.setBackgroundResource(R.anim.feng);
+//	        Object ob = defaultImageView.getBackground();
+//	        anim = (AnimationDrawable) ob;
+//	        anim.setOneShot(true);
+//	        anim.stop();
+//	        anim.start();
+//		}
+//		else if (weather.indexOf("雪") != -1) {
+////			homeBg.setBackgroundResource(R.drawable.day_sunny_01);
+//			homeBg.setBackgroundResource(R.drawable.day_snow_01);
+//			defaultImageView.setBackgroundResource(R.anim.xue);
+//	        Object ob = defaultImageView.getBackground();
+//	        anim = (AnimationDrawable) ob;
+//	        anim.setOneShot(true);
+//	        anim.stop();
+//	        anim.start();
+//		}
+//		else if (weather.indexOf("雨") != -1) {
+////			homeBg.setBackgroundResource(R.drawable.day_sunny_01);
+//			homeBg.setBackgroundResource(R.drawable.day_rain_01);
+//			defaultImageView.setBackgroundResource(R.anim.yu);
+//	        Object ob = defaultImageView.getBackground();
+//	        anim = (AnimationDrawable) ob;
+//	        anim.setOneShot(true);
+//	        anim.stop();
+//	        anim.start();
+//		}
+		try {
+			timer.scheduleAtFixedRate(task, 10000, 20000);
+		} catch (Exception e) {
+			Logger.i(e);
 		}
-		else if (weather.indexOf("雪") != -1) {
-			homeBg.setBackgroundResource(R.drawable.day_snow_01);
-			defaultImageView.setBackgroundResource(R.anim.xue);
-			AnimationDrawable anim = null;
-	        Object ob = defaultImageView.getBackground();
-	        anim = (AnimationDrawable) ob;
-	        anim.stop();
-	        anim.start();
-		}
-		else if (weather.indexOf("雨") != -1) {
-			homeBg.setBackgroundResource(R.drawable.day_rain_01);
-			defaultImageView.setBackgroundResource(R.anim.yu);
-			AnimationDrawable anim = null;
-	        Object ob = defaultImageView.getBackground();
-	        anim = (AnimationDrawable) ob;
-	        anim.stop();
-	        anim.start();
-		}
+       
 	}
+	
+	private void playAnimation() {
+		Object ob = defaultImageView.getBackground();
+        anim = (AnimationDrawable) ob;
+        anim.setOneShot(true);
+        anim.stop();
+		anim.start();
+		Logger.i("dddd");
+	}
+	
+	TimerTask task = new TimerTask() {
+        @Override
+        public void run() {
+                Message message = new Message();
+                message.what = 0;
+                handler.sendMessage(message);
+        }
+	};
+ 
+	Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+                switch (msg.what) {
+                case 0:
+                	
+                        playAnimation();
+                        break;
+
+                default:
+                        break;
+                }
+                return false;
+        }
+	});
 	
 	private void notiWeather(SKWeather weather) {
 		Intent intent = new Intent();
@@ -641,13 +694,14 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 
 	@Override
 	public void onHeaderRefresh(PullToRefreshView view) {
+		 
 		if(!appContext.isNetworkConnected()) {
         	UIHelper.ToastMessage(this, R.string.network_not_connected, Toast.LENGTH_SHORT);
         	mPullToRefreshView.onHeaderRefreshComplete();
         }
 		else {
 			defaultImageView.clearAnimation();
-			defaultImageView.setBackgroundResource(R.drawable.qing0001);
+			defaultImageView.setBackgroundResource(R.drawable.feng0001);
 			mAMapLocManager.requestLocationUpdates(LocationProviderProxy.AMapNetwork, 1000, 10, this);
 		}
 	}
