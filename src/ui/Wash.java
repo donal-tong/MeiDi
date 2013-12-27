@@ -118,17 +118,26 @@ public class Wash extends AppActivity{
 	 * 接受weather的广播
 	 * @author Donal Tong
 	 */
-	public static class WeatherReceiver extends BroadcastReceiver {
-		public void onReceive(Context context, Intent intent) {
-			weather = (SKWeather) intent.getExtras().getSerializable("weather");
-				Logger.i("a");
-		}
-	}
+//	public static class WeatherReceiver extends BroadcastReceiver {
+//		public void onReceive(Context context, Intent intent) {
+//			weather = (SKWeather) intent.getExtras().getSerializable("weather");
+//				Logger.i("a");
+//		}
+//	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		drawPie();
+		String cityCode = appContext.getDisName();
+		if (cityCode.length() != 0) {
+			String key = String.format("%s-%s", "weather", cityCode);
+			SKWeather entity = (SKWeather) appContext.readObject(key);
+			if(entity != null){
+				weather = entity;
+				drawPie();
+			}
+		}
+		
 	}
 	
 	private void drawPie() {

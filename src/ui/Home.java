@@ -16,9 +16,11 @@ import widget.PullToRefreshView;
 import widget.PullToRefreshView.OnFooterRefreshListener;
 import widget.PullToRefreshView.OnHeaderRefreshListener;
 
+import bean.AirIndexEntity;
 import bean.Entity;
 import bean.ForecastWeather;
 import bean.IndexEntity;
+import bean.Result;
 import bean.SKWeather;
 
 import com.amap.api.location.AMapLocation;
@@ -107,6 +109,8 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 	private ImageView day6nIV;
 	
 	private LinearLayout wuranLayout;
+	private TextView qualityTV;
+	private TextView pm2TV;
 	
 	private PullToRefreshView mPullToRefreshView;
 	private ListView mListView;
@@ -179,6 +183,8 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 		cImageView = (ImageView) header.findViewById(R.id.cImageView);
 		defaultImageView = (ImageView) header.findViewById(R.id.defaultImageView);
 		wuranLayout = (LinearLayout) header.findViewById(R.id.wuranLayout);
+		qualityTV = (TextView) header.findViewById(R.id.qualityTV);
+		pm2TV = (TextView) header.findViewById(R.id.pm2TV);
 		
 		minMaxTV = (TextView) header.findViewById(R.id.minMaxTV);
 		minMaxTV.setTypeface(face);
@@ -359,12 +365,14 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 	
 	
 	@SuppressLint("HandlerLeak")
-	public void initWaetherData(final String cityName) {
+	public void initWaetherData(final String disName, String cityName) {
+		getAirIndexFromCache(cityName);
 		final Handler handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
 				if (msg.what == 1) {
 					String cityCode = (String)msg.obj;
+					appContext.setDisName(cityCode);
 					getWeatherFromCache(cityCode);
 					querySKWeather(cityCode);
 					forecastWeather(cityCode);
@@ -383,7 +391,7 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 					manager.copyDatabase();
 					String cityCode = null;
 					String sql = "select * from city_table where CITY like" +"'%"
-							+ cityName + "'" + ";";
+							+ disName + "'" + ";";
 					Cursor cursor = helper.getReadableDatabase()
 							.rawQuery(sql, null);
 					if (cursor != null) {
@@ -403,6 +411,49 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 				handler.sendMessage(msg);
 			}
 		}).start();
+	}
+	
+	private void getAirIndexFromCache(String cityCode) {
+		String key = String.format("%s-%s", "AirIndex", cityCode);
+		AirIndexEntity entity = (AirIndexEntity) appContext.readObject(key);
+		if(entity != null){
+			switch (entity.getError_code()) {
+			case Result.RESULT_OK:
+				wuranLayout.setVisibility(View.VISIBLE);
+				pm2TV.setText(entity.pm2_5);
+				qualityTV.setText(entity.quality);
+				break;
+			default:
+				break;
+			}
+		}
+		WeatherClient.getAirIndex(appContext, cityCode, new ClientCallback() {
+			
+			@Override
+			public void onSuccess(Entity data) {
+				AirIndexEntity entity = (AirIndexEntity) data;
+				switch (entity.getError_code()) {
+				case Result.RESULT_OK:
+					wuranLayout.setVisibility(View.VISIBLE);
+					pm2TV.setText(entity.pm2_5);
+					qualityTV.setText(entity.quality);
+					break;
+				default:
+					break;
+				}
+				
+			}
+			
+			@Override
+			public void onFailure(String message) {
+				
+			}
+			
+			@Override
+			public void onError(Exception e) {
+				
+			}
+		});
 	}
 	
 	private void getWeatherFromCache(String cityCode) {
@@ -508,9 +559,8 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 	}
 	
 	private void handleWeatherAnimation(String weather) {
-//		homeBg.setBackgroundResource(R.drawable.day_rain_01);
+		homeBg.setBackgroundResource(R.drawable.day_sunny_01);
 //		if (weather.indexOf("晴") != -1) {
-			homeBg.setBackgroundResource(R.drawable.feng0001);
 			defaultImageView.setBackgroundResource(R.anim.feng);
 	        Object ob = defaultImageView.getBackground();
 	        anim = (AnimationDrawable) ob;
@@ -556,12 +606,17 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 	}
 	
 	private void playAnimation() {
-		Object ob = defaultImageView.getBackground();
-        anim = (AnimationDrawable) ob;
-        anim.setOneShot(true);
-        anim.stop();
-		anim.start();
-		Logger.i("dddd");
+		try {
+			Object ob = defaultImageView.getBackground();
+	        anim = (AnimationDrawable) ob;
+	        anim.setOneShot(true);
+	        anim.stop();
+			anim.start();
+			Logger.i("dddd");
+		} catch (Exception e) {
+			Logger.i(e);
+		}
+		
 	}
 	
 	TimerTask task = new TimerTask() {
@@ -634,7 +689,7 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 		CalendarUtil day = new CalendarUtil(0);
 		dayTV.setText(day.Date2String(day.getDay(),"yyyy年M月d日"));
 		lunarTV.setText(lunarStr);
-		notiWeather(weather);
+//		notiWeather(weather);
 	}
 	
 	@Override
@@ -678,7 +733,7 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 //			Logger.i(str);
 //			Logger.i(location.getDistrict());
 			locationTV.setText(location.getDistrict());
-			initWaetherData(location.getDistrict().substring(0, location.getDistrict().length()-1));
+			initWaetherData(location.getDistrict().substring(0, location.getDistrict().length()-1), location.getCityCode());
 			mAMapLocManager.removeUpdates(this);
 		}
 		else {

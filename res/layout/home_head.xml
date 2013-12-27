@@ -26,6 +26,7 @@
                 android:visibility="gone"
                 >
                 <TextView 
+                    android:id="@+id/qualityTV"
                     android:layout_marginTop="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -36,12 +37,13 @@
                     android:layout_gravity="center_horizontal"
                     />
                 <TextView 
+                    android:id="@+id/pm2TV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="108"
                     android:textColor="@color/white"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     android:layout_gravity="center_horizontal"
                     />
             </LinearLayout>

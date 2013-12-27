@@ -121,26 +121,26 @@ public final class R {
 		public static final int review_bg_blue = 0x7f02005e;
 	}
 	public static final class id {
-		public static final int arrow = 0x7f0b0049;
-		public static final int comment = 0x7f0b004b;
-		public static final int date = 0x7f0b004c;
-		public static final int head_arrowImageView = 0x7f0b004d;
-		public static final int header = 0x7f0b0048;
-		public static final int listview_head_loading = 0x7f0b004e;
-		public static final int progress = 0x7f0b004a;
-		public static final int pull_to_load_text = 0x7f0b0051;
-		public static final int pull_to_refresh_header = 0x7f0b004f;
-		public static final int pull_to_refresh_text = 0x7f0b0052;
-		public static final int pull_to_refresh_updated_at = 0x7f0b0053;
-		public static final int refreshIV = 0x7f0b0050;
-		public static final int tv = 0x7f0b005b;
+		public static final int arrow = 0x7f0b004d;
+		public static final int comment = 0x7f0b004f;
+		public static final int date = 0x7f0b0050;
+		public static final int head_arrowImageView = 0x7f0b0051;
+		public static final int header = 0x7f0b004c;
+		public static final int listview_head_loading = 0x7f0b0052;
+		public static final int progress = 0x7f0b004e;
+		public static final int pull_to_load_text = 0x7f0b0055;
+		public static final int pull_to_refresh_header = 0x7f0b0053;
+		public static final int pull_to_refresh_text = 0x7f0b0056;
+		public static final int pull_to_refresh_updated_at = 0x7f0b0057;
+		public static final int refreshIV = 0x7f0b0054;
+		public static final int tv = 0x7f0b005e;
 	}
 	public static final class layout {
-		public static final int layout_refreshlistview_header = 0x7f030002;
-		public static final int pull_to_refresh_head = 0x7f030003;
-		public static final int refresh_footer = 0x7f030004;
-		public static final int refresh_header = 0x7f030005;
-		public static final int toastmessage_text = 0x7f030009;
+		public static final int layout_refreshlistview_header = 0x7f030003;
+		public static final int pull_to_refresh_head = 0x7f030004;
+		public static final int refresh_footer = 0x7f030005;
+		public static final int refresh_header = 0x7f030006;
+		public static final int toastmessage_text = 0x7f03000a;
 	}
 	public static final class string {
 		public static final int Cancel = 0x7f0900b3;

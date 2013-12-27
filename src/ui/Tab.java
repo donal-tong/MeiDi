@@ -7,6 +7,8 @@ import cn.sharesdk.framework.ShareSDK;
 
 import com.vikaa.meidi.R;
 
+import config.MeiDiApp;
+
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +19,7 @@ import android.widget.TabHost;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
 public class Tab extends TabActivity  implements OnCheckedChangeListener{
-	private AppContext ac;
+	private MeiDiApp ac;
 	private RadioGroup mainTab;
 	public static TabHost mTabHost;
 	
@@ -41,7 +43,7 @@ public class Tab extends TabActivity  implements OnCheckedChangeListener{
         setupIntent();
         RadioButton homebutton = (RadioButton)findViewById(R.id.radio_button1);
         homebutton.setChecked(true);
-        ac = (AppContext) getApplication();
+        ac = (MeiDiApp) getApplication();
 	}
 	
 	@Override
@@ -92,7 +94,7 @@ public class Tab extends TabActivity  implements OnCheckedChangeListener{
 		}
 	}
 	
-public void tabClick(View v) {
+	public void tabClick(View v) {
 		
 	}
 }
