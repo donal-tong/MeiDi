@@ -1,7 +1,11 @@
 package ui;
 
+import java.io.IOException;
+
 import tools.AppContext;
 import tools.AppManager;
+import tools.DataBaseUtil;
+import tools.Logger;
 
 import cn.sharesdk.framework.ShareSDK;
 
@@ -44,6 +48,7 @@ public class Tab extends TabActivity  implements OnCheckedChangeListener{
         RadioButton homebutton = (RadioButton)findViewById(R.id.radio_button1);
         homebutton.setChecked(true);
         ac = (MeiDiApp) getApplication();
+        copyDataBaseToPhone();
 	}
 	
 	@Override
@@ -97,4 +102,20 @@ public class Tab extends TabActivity  implements OnCheckedChangeListener{
 	public void tabClick(View v) {
 		
 	}
+	
+	private void copyDataBaseToPhone() {  
+        DataBaseUtil util = new DataBaseUtil(this);  
+        // 判断数据库是否存在  
+        boolean dbExist = util.checkDataBase();  
+  
+        if (dbExist) {  
+            Logger.i("The database is exist.");  
+        } else {// 不存在就把raw里的数据库写入手机  
+            try {  
+                util.copyDataBase();  
+            } catch (IOException e) {  
+                throw new Error("Error copying database");  
+            }  
+        }  
+    }
 }

@@ -4,10 +4,14 @@ import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import moji.IdxListEntity;
+import moji.MojiEntity;
+
 import tools.AppException;
 import tools.CalendarUtil;
 import tools.DBHelper;
 import tools.DBManager;
+import tools.DistrictDataBase;
 import tools.ImageUtils;
 import tools.Logger;
 import tools.Lunar;
@@ -366,51 +370,71 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 	
 	@SuppressLint("HandlerLeak")
 	public void initWaetherData(final String disName, String cityName) {
-		getAirIndexFromCache(cityName);
-		final Handler handler = new Handler() {
+//		getAirIndexFromCache(cityName);
+		String city_id = DistrictDataBase.getCityId(this, disName);
+		Logger.i(city_id);
+		WeatherClient.getMOJI(appContext, city_id, new ClientCallback() {
 			@Override
-			public void handleMessage(Message msg) {
-				if (msg.what == 1) {
-					String cityCode = (String)msg.obj;
-					appContext.setDisName(cityCode);
-					getWeatherFromCache(cityCode);
-					querySKWeather(cityCode);
-					forecastWeather(cityCode);
-				} else {
-					
-				}
+			public void onSuccess(Entity data) {
+				mPullToRefreshView.onHeaderRefreshComplete();
+				MojiEntity moji = (MojiEntity) data;
+				handleMoji(moji);
 			}
-		};
-		new Thread(new Runnable() {
+			
 			@Override
-			public void run() {
-				Message msg = new Message();
-				try {
-					DBHelper helper = new DBHelper(getApplicationContext());
-					DBManager manager = new DBManager(getApplicationContext());
-					manager.copyDatabase();
-					String cityCode = null;
-					String sql = "select * from city_table where CITY like" +"'%"
-							+ disName + "'" + ";";
-					Cursor cursor = helper.getReadableDatabase()
-							.rawQuery(sql, null);
-					if (cursor != null) {
-						cursor.moveToFirst();
-						cityCode = cursor.getString(cursor
-								.getColumnIndex("WEATHER_ID"));
-					}
-					cursor.close();
-					helper.close();
-					msg.what = 1;
-					msg.obj = cityCode;
-				} catch (Exception e) {
-					e.printStackTrace();
-					msg.what = -1;
-					msg.obj = e;
-				}
-				handler.sendMessage(msg);
+			public void onFailure(String message) {
+				mPullToRefreshView.onHeaderRefreshComplete();
 			}
-		}).start();
+			
+			@Override
+			public void onError(Exception e) {
+				mPullToRefreshView.onHeaderRefreshComplete();
+			}
+		});
+//		final Handler handler = new Handler() {
+//			@Override
+//			public void handleMessage(Message msg) {
+//				if (msg.what == 1) {
+//					String cityCode = (String)msg.obj;
+//					appContext.setDisName(cityCode);
+//					getWeatherFromCache(cityCode);
+//					querySKWeather(cityCode);
+//					forecastWeather(cityCode);
+//				} else {
+//					
+//				}
+//			}
+//		};
+//		new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				Message msg = new Message();
+//				try {
+//					DBHelper helper = new DBHelper(getApplicationContext());
+//					DBManager manager = new DBManager(getApplicationContext());
+//					manager.copyDatabase();
+//					String cityCode = null;
+//					String sql = "select * from city_table where CITY like" +"'%"
+//							+ disName + "'" + ";";
+//					Cursor cursor = helper.getReadableDatabase()
+//							.rawQuery(sql, null);
+//					if (cursor != null) {
+//						cursor.moveToFirst();
+//						cityCode = cursor.getString(cursor
+//								.getColumnIndex("WEATHER_ID"));
+//					}
+//					cursor.close();
+//					helper.close();
+//					msg.what = 1;
+//					msg.obj = cityCode;
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//					msg.what = -1;
+//					msg.obj = e;
+//				}
+//				handler.sendMessage(msg);
+//			}
+//		}).start();
 	}
 	
 	private void getAirIndexFromCache(String cityCode) {
@@ -693,6 +717,64 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 //		notiWeather(weather);
 	}
 	
+	private void handleMoji(MojiEntity moji) {
+		weatherInfoView.setVisibility(View.VISIBLE);
+		tempTV.setText(moji.cc.tmp);
+		cImageView.setVisibility(View.VISIBLE);
+		weatherTV.setVisibility(View.VISIBLE);
+		weatherTV.setText(moji.cc.wd);
+		dayTV.setText(moji.cc.gdt+""+moji.cc.ldt);
+		minMaxTV.setText(moji.cc.htmp+"/"+moji.cc.ltmp+"℃");
+		windTV.setText(moji.cc.wdir+""+moji.cc.wl+"级");
+		wetTV.setText("湿度"+moji.cc.hum+"%");
+		dayTV.setText(moji.cc.gdt+""+moji.cc.ldt);
+		handlerWeekWeather(moji);
+		
+		wuranLayout.setVisibility(View.VISIBLE);
+		pm2TV.setText(moji.air.lv);
+		qualityTV.setText(moji.air.aqigrade);
+	}
+	
+	private void handlerWeekWeather(MojiEntity moji) {
+//		handleWeatherAnimation(weather.weather1);
+//		day1TV.setText(weather.day1);
+//		day2TV.setText(weather.day2);
+//		day3TV.setText(weather.day3);
+//		day4TV.setText(weather.day4);
+//		day5TV.setText(weather.day5);
+//		day6TV.setText(weather.day6);
+   		day1maxTV.setText(moji.forecastDays.get(0).htmp+"℃");
+   		day1minTV.setText(moji.forecastDays.get(0).ltmp+"℃");
+   		day2maxTV.setText(moji.forecastDays.get(1).htmp+"℃");
+   		day2minTV.setText(moji.forecastDays.get(1).ltmp+"℃");
+   		day3maxTV.setText(moji.forecastDays.get(2).htmp+"℃");
+   		day3minTV.setText(moji.forecastDays.get(2).ltmp+"℃");
+   		day4maxTV.setText(moji.forecastDays.get(3).htmp+"℃");
+   		day4minTV.setText(moji.forecastDays.get(3).ltmp+"℃");
+   		day5maxTV.setText(moji.forecastDays.get(4).htmp+"℃");
+   		day5minTV.setText(moji.forecastDays.get(4).ltmp+"℃");
+   		day6maxTV.setText(moji.forecastDays.get(5).htmp+"℃");
+   		day6minTV.setText(moji.forecastDays.get(5).ltmp+"℃");
+   		for (IdxListEntity idx : moji.idxs) {
+   			if (idx.nm.equals("穿衣指数")) {
+   				clothTV.setText(idx.desc);
+			}
+   			else if (idx.nm.equals("紫外线指数")) {
+   				lineTV.setText(idx.desc);
+			}
+   			else if (idx.nm.equals("运动指数")) {
+   				sportTV.setText(idx.desc);
+			}
+   			else if (idx.nm.equals("洗车指数")) {
+   				carTV.setText(idx.desc);
+			}
+   			else if (idx.nm.equals("化妆指数")) {
+   				cleanupTV.setText(idx.desc);
+			}
+		}
+	   	
+	}
+	
 	@Override
 	public void onLocationChanged(Location arg0) {
 		Logger.i("asdf");
@@ -735,7 +817,11 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 //			Logger.i(location.getDistrict());
 			locationTV.setText(location.getDistrict());
 			initWaetherData(location.getDistrict().substring(0, location.getDistrict().length()-1), location.getCityCode());
+			
+			
+			
 			mAMapLocManager.removeUpdates(this);
+			
 		}
 		else {
 			UIHelper.ToastMessage(this, "网络不给力哦，请往下拉再试试", Toast.LENGTH_SHORT);
