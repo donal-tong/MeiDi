@@ -60,23 +60,23 @@ public class Tips extends AppActivity {
 	private void addData() {
 		TipListEntity list = new TipListEntity();
 		TipEntity tip1 = new TipEntity();
-		tip1.image = "a";
+		tip1.image = R.drawable.meidi1+"";
 		tip1.url = "http://42.120.12.71/md/post-1.html";
 		list.tips.add(tip1);
 		TipEntity tip2 = new TipEntity();
-		tip2.image = "a";
+		tip2.image = R.drawable.meidi2+"";
 		tip2.url = "http://42.120.12.71/md/post-2.html";
 		list.tips.add(tip2);
 		TipEntity tip3 = new TipEntity();
-		tip3.image = "a";
+		tip3.image = R.drawable.meidi3+"";
 		tip3.url = "http://42.120.12.71/md/post-3.html";
 		list.tips.add(tip3);
 		TipEntity tip4 = new TipEntity();
-		tip4.image = "a";
+		tip4.image = R.drawable.meidi4+"";
 		tip4.url = "http://42.120.12.71/md/post-4.html";
 		list.tips.add(tip4);
 		TipEntity tip5 = new TipEntity();
-		tip5.image = "a";
+		tip5.image = R.drawable.meidi5+"";
 		tip5.url = "http://42.120.12.71/md/post-5.html";
 		list.tips.add(tip5);
 		for (int i = 0; i < list.tips.size(); i++) {

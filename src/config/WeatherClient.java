@@ -3,6 +3,8 @@ package config;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import moji.MojiEntity;
+
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -128,6 +130,33 @@ public class WeatherClient {
 			@Override
 			public void onFailure(int arg0, Header[] arg1, byte[] arg2, Throwable arg3) {
 				
+			}
+		});
+    }
+    
+    public static void getMOJI(final MeiDiApp appContext, final String cityCode, final ClientCallback callback) {
+    	String url = String.format("http://cdn.moji001.com/07a1b201656eab10e8e352bc46c30c2c/52BD5A23/data/xml/weather/501/%s_2.xml?CityID=%s&cdma_lat=23.002078&Platform=iOS&Location=&Version=50040101&DV=501&AvatarID=2&Days=5&DT=xml&ID=603068156&cdma_lng=113.356704", cityCode, cityCode);
+    	Logger.i(url);
+    	QYRestClient.get(url, null, new AsyncHttpResponseHandler() {
+			
+			@Override
+			public void onSuccess(int arg0, Header[] arg1, byte[] content) {
+				try{
+					if (content != null) {
+						String res = new String(content) ;
+						MojiEntity moji = MojiEntity.parse(res);
+						callback.onSuccess(moji);
+						saveCache(appContext, "moji-"+cityCode, moji);
+					}
+				}catch (Exception e) {
+					callback.onError(e);
+				}
+			}
+			
+			@Override
+			public void onFailure(int arg0, Header[] arg1, byte[] arg2, Throwable arg3) {
+				Logger.i("a");
+				Logger.i(arg3.toString());
 			}
 		});
     }

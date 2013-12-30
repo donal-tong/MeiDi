@@ -9,7 +9,6 @@
              android:id="@+id/tip1"
              android:layout_width="298dp"
              android:layout_height="168dp"
-             android:background="@drawable/baby_tip"
              android:layout_centerHorizontal="true"
              android:scaleType="centerCrop"
              android:layout_marginBottom="8dp"
@@ -20,7 +19,6 @@
              android:id="@+id/tip2"
 	         android:layout_width="151dp"
 	         android:layout_height="180dp"
-	         android:background="@drawable/pagenent_tip"
 	         android:scaleType="centerCrop"
          />  
          <ImageView 
@@ -29,7 +27,6 @@
              android:id="@+id/tip3"
 	         android:layout_width="141dp"
 	         android:layout_height="87dp"
-	         android:background="@drawable/pagenent_tip2"
 	         android:scaleType="centerCrop"
          />
          <ImageView 
@@ -39,7 +36,6 @@
 	         android:layout_marginTop="7dp"
 	         android:layout_width="141dp"
 	         android:layout_height="87dp"
-	         android:background="@drawable/wash_tip"
 	         android:scaleType="centerCrop"
          />
 </RelativeLayout>

@@ -34,6 +34,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.WebStorage.QuotaUpdater;
 import android.widget.Toast;
 
 public class CreateView extends AppActivity {
@@ -53,11 +54,21 @@ public class CreateView extends AppActivity {
 	
 	private void initData() {
 		String url = getIntent().getStringExtra("url");
-		webView.getSettings().setLightTouchEnabled(true);
-		webView.getSettings().setJavaScriptEnabled(true);
-		webView.clearCache(true);
-		webView.clearHistory();
-		webView.clearFormData();
+		WebSettings webseting = webView.getSettings();  
+		webseting.setJavaScriptEnabled(true);
+		webseting.setLightTouchEnabled(true);
+	    webseting.setDomStorageEnabled(true);             
+	    webseting.setAppCacheMaxSize(1024*1024*8);//设置缓冲大小，我设的是8M  
+	    String appCacheDir = this.getApplicationContext().getDir("cache", Context.MODE_PRIVATE).getPath();      
+        webseting.setAppCachePath(appCacheDir);  
+        webseting.setAllowFileAccess(true);  
+        webseting.setAppCacheEnabled(true); 
+        if (appContext.isNetworkConnected()) {
+        	webseting.setCacheMode(WebSettings.LOAD_DEFAULT); 
+		}
+        else {
+        	webseting.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK); 
+        }
 		
 		webView.setWebViewClient(new WebViewClient() {
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -77,6 +88,11 @@ public class CreateView extends AppActivity {
 		        if (progress == 100) {
 		        	UIHelper.dismissProgress(loadingPd);
 		        }
+		    }
+		    @Override
+		    public void onReachedMaxAppCacheSize(long spaceNeeded,
+		    		long quota, QuotaUpdater quotaUpdater) {
+		    	quotaUpdater.updateQuota(spaceNeeded * 2);  
 		    }
 		});
 		loadingPd = UIHelper.showProgress(this, null, null, true);

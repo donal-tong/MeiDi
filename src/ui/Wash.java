@@ -129,14 +129,14 @@ public class Wash extends AppActivity{
 	protected void onResume() {
 		super.onResume();
 		String cityCode = appContext.getDisName();
-		if (cityCode.length() != 0) {
-			String key = String.format("%s-%s", "weather", cityCode);
-			SKWeather entity = (SKWeather) appContext.readObject(key);
-			if(entity != null){
-				weather = entity;
-				drawPie();
-			}
-		}
+//		if (cityCode.length() != 0) {
+//			String key = String.format("%s-%s", "weather", cityCode);
+//			SKWeather entity = (SKWeather) appContext.readObject(key);
+////			if(entity != null){
+////				weather = entity;
+////				drawPie();
+////			}
+//		}
 		
 	}
 	
