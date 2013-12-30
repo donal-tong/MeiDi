@@ -676,6 +676,7 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 	}
 	
 	private void handleDayWeather(SKWeather weather) {
+		weatherInfoView.setVisibility(View.VISIBLE);
 		tempTV.setText(weather.temp);
 		windTV.setText(weather.WD+""+weather.WS);
 		wetTV.setText("湿度"+weather.SD);
