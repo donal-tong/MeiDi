@@ -115,16 +115,6 @@ public class Wash extends AppActivity{
         showShare(true, null);
 	}
 	
-	/**
-	 * 接受weather的广播
-	 * @author Donal Tong
-	 */
-//	public static class WeatherReceiver extends BroadcastReceiver {
-//		public void onReceive(Context context, Intent intent) {
-//			weather = (SKWeather) intent.getExtras().getSerializable("weather");
-//				Logger.i("a");
-//		}
-//	}
 	
 	@Override
 	protected void onResume() {

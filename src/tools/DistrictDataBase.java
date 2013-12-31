@@ -1,5 +1,9 @@
 package tools;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -24,35 +28,12 @@ public class DistrictDataBase extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		
 	}
-//	
-//	public static String getCity(Context context, String city) {
-//		DistrictDataBase helper = new DistrictDataBase(context, DB_NAME, null, VERSIONOFCREATING);
-//		SQLiteDatabase db = helper.getWritableDatabase();
-//		Cursor cursor = db.query(TB_CITY, null, "province_id=?", new String[]{province_id}, null, null, "city_id asc");
-//		try {
-//			while(cursor.moveToNext()) {
-//				City city = new City();
-//				city.province_id = cursor.getString(cursor.getColumnIndex("province_id"));
-//				city.city_id = cursor.getString(cursor.getColumnIndex("city_id"));
-//				city.city_name = cursor.getString(cursor.getColumnIndex("city_name"));
-//				list.add(city);
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} finally {
-//			cursor.close();
-//			db.close();
-//			helper.close();
-//		}
-//		return list;
-//	}
 	
 	public static String getCityId(Context context, String cityName) {
 		String cityCode = "";
 		DistrictDataBase helper = new DistrictDataBase(context, DB_NAME, null, VERSIONOFCREATING);
 		SQLiteDatabase db = helper.getWritableDatabase();
-//		Cursor cursor = db.query("moji", null, "city_name like?", new String[]{"'%"}, null, null, "district_id asc");
-		String sql = "select * from moji where city_name like" +"'%"
+		String sql = "select * from moji where city_pinyin !='' and city_name like" +"'%"
 				+ cityName + "'" + ";";
 		Cursor cursor = db.rawQuery(sql, null);
 		try {
@@ -69,6 +50,27 @@ public class DistrictDataBase extends SQLiteOpenHelper {
 			helper.close();
 		}
 		return cityCode;
+	}
+	
+	public static List<String> getCitys(Context context) {
+		List<String> citys = new ArrayList<String>();
+		DistrictDataBase helper = new DistrictDataBase(context, DB_NAME, null, VERSIONOFCREATING);
+		SQLiteDatabase db = helper.getWritableDatabase();
+		String sql = "select * from moji where city_pinyin !=''";
+		Cursor cursor = db.rawQuery(sql, null);
+		try {
+			while(cursor.moveToNext()) {
+				String city = cursor.getString(cursor.getColumnIndex("city_name"));
+				citys.add(city);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			cursor.close();
+			db.close();
+			helper.close();
+		}
+		return citys;
 	}
 	
 }

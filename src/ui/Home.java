@@ -15,6 +15,7 @@ import tools.DistrictDataBase;
 import tools.ImageUtils;
 import tools.Logger;
 import tools.Lunar;
+import tools.StringUtils;
 import tools.UIHelper;
 import widget.PullToRefreshView;
 import widget.PullToRefreshView.OnFooterRefreshListener;
@@ -123,6 +124,8 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 	
 	private AnimationDrawable anim = null;
 	Timer timer = new Timer();
+	
+	private String cityName;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -369,7 +372,7 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 	
 	
 	@SuppressLint("HandlerLeak")
-	public void initWaetherData(final String disName, String cityName) {
+	public void initWaetherData(final String disName) {
 		String mojiCityId = DistrictDataBase.getCityId(this, disName);
 		Logger.i(mojiCityId);
 		getMojiFromCache(mojiCityId);
@@ -532,8 +535,7 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 	}
 	
 	private void handlerWeekWeather(ForecastWeather weather) {
-//		weatherInfoView.setVisibility(View.VISIBLE);
-//		weatherTV.setText(weather.weather1);
+		
 		handleWeatherAnimation(weather.weather1);
 		day1TV.setText(weather.day1);
 		day2TV.setText(weather.day2);
@@ -726,18 +728,18 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 //		day4TV.setText(weather.day4);
 //		day5TV.setText(weather.day5);
 //		day6TV.setText(weather.day6);
-   		day1maxTV.setText(moji.forecastDays.get(0).htmp+"℃");
-   		day1minTV.setText(moji.forecastDays.get(0).ltmp+"℃");
-   		day2maxTV.setText(moji.forecastDays.get(1).htmp+"℃");
-   		day2minTV.setText(moji.forecastDays.get(1).ltmp+"℃");
-   		day3maxTV.setText(moji.forecastDays.get(2).htmp+"℃");
-   		day3minTV.setText(moji.forecastDays.get(2).ltmp+"℃");
-   		day4maxTV.setText(moji.forecastDays.get(3).htmp+"℃");
-   		day4minTV.setText(moji.forecastDays.get(3).ltmp+"℃");
-   		day5maxTV.setText(moji.forecastDays.get(4).htmp+"℃");
-   		day5minTV.setText(moji.forecastDays.get(4).ltmp+"℃");
-   		day6maxTV.setText(moji.forecastDays.get(5).htmp+"℃");
-   		day6minTV.setText(moji.forecastDays.get(5).ltmp+"℃");
+//   		day1maxTV.setText(moji.forecastDays.get(0).htmp+"℃");
+//   		day1minTV.setText(moji.forecastDays.get(0).ltmp+"℃");
+//   		day2maxTV.setText(moji.forecastDays.get(1).htmp+"℃");
+//   		day2minTV.setText(moji.forecastDays.get(1).ltmp+"℃");
+//   		day3maxTV.setText(moji.forecastDays.get(2).htmp+"℃");
+//   		day3minTV.setText(moji.forecastDays.get(2).ltmp+"℃");
+//   		day4maxTV.setText(moji.forecastDays.get(3).htmp+"℃");
+//   		day4minTV.setText(moji.forecastDays.get(3).ltmp+"℃");
+//   		day5maxTV.setText(moji.forecastDays.get(4).htmp+"℃");
+//   		day5minTV.setText(moji.forecastDays.get(4).ltmp+"℃");
+//   		day6maxTV.setText(moji.forecastDays.get(5).htmp+"℃");
+//   		day6minTV.setText(moji.forecastDays.get(5).ltmp+"℃");
    		for (IdxListEntity idx : moji.idxs) {
    			if (idx.nm.equals("穿衣指数")) {
    				clothTV.setText(idx.desc);
@@ -801,8 +803,13 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 //					+ location.getCityCode() + "\n区域编码:" + location.getAdCode());
 //			Logger.i(str);
 //			Logger.i(location.getDistrict());
-			locationTV.setText(location.getDistrict());
-			initWaetherData(location.getDistrict().substring(0, location.getDistrict().length()-1), location.getCityCode());
+			if (!StringUtils.isEmpty(location.getDistrict())) {
+				locationTV.setText(location.getDistrict());
+				initWaetherData(location.getDistrict().substring(0, location.getDistrict().length()-1));
+			}
+			else {
+				locationTV.setText("定位失败，请点击选择城市看看");
+			}
 			mAMapLocManager.removeUpdates(this);
 		}
 		else {
@@ -826,7 +833,54 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 		else {
 			defaultImageView.clearAnimation();
 			defaultImageView.setBackgroundResource(R.drawable.feng0001);
-			mAMapLocManager.requestLocationUpdates(LocationProviderProxy.AMapNetwork, 1000, 10, this);
+			if (!StringUtils.isEmpty(cityName)) {
+				initWaetherData(cityName);
+			}
+			else {
+				mAMapLocManager.requestLocationUpdates(LocationProviderProxy.AMapNetwork, 1000, 10, this);
+			}
+		}
+	}
+	
+	public void ButtonClick(View v) {
+		switch (v.getId()) {
+		case R.id.locaitonIcon:
+			cityName= "";
+			mPullToRefreshView.headerRefreshing();
+			break;
+		case R.id.locationTV:
+			showCitys();
+			break;
+		case R.id.dayTV:
+			showLunar();
+			break;
+		}
+	}
+	
+	private void showCitys() {
+		Intent intent = new Intent(this, ui.Location.class);
+		startActivityForResult(intent, 45);
+	}
+	
+	private void showLunar() {
+		Intent intent = new Intent(this, LunarDetail.class);
+		intent.putExtra("lunar", dayTV.getText().toString());
+		startActivity(intent);
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode != RESULT_OK) {
+			return;
+		}
+		switch (requestCode) {
+		case 45:
+			cityName = data.getExtras().getString("city");
+			if (!StringUtils.isEmpty(cityName)) {
+				locationTV.setText(cityName);
+				mPullToRefreshView.headerRefreshing();
+			}
+			break;
 		}
 	}
 }

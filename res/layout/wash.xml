@@ -166,6 +166,7 @@
 	        android:textColor="#002c54"
 	        android:textSize="15sp"
 	        android:drawablePadding="3dp"
+	        android:text="水温30~35℃"
 	        />
 	    
 	    <TextView 
@@ -182,6 +183,7 @@
 	        android:textColor="#002c54"
 	        android:textSize="15sp"
 	        android:drawablePadding="3dp"
+	        android:text="时长35～40min"
 	        />
 	    
 	    <TextView 
@@ -198,6 +200,7 @@
 	        android:textColor="#002c54"
 	        android:textSize="15sp"
 	        android:drawablePadding="3dp"
+	        android:text="水量适中"
 	        />
 	    
 	</LinearLayout>

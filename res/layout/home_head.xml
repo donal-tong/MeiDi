@@ -109,6 +109,8 @@
 	            android:layout_height="wrap_content"
 	            android:textSize="15sp"
 	            android:textColor="@color/white"
+	            android:clickable="true"
+	            android:onClick="ButtonClick"
 	            />
 	        <TextView 
 	            android:id="@+id/lunarTV"

@@ -70,7 +70,15 @@
                        
         </activity>
         
+		<activity android:name="ui.Location" android:screenOrientation="portrait"  >
+                       
+        </activity>
+        
 		<activity android:name="ui.CreateView" android:screenOrientation="portrait"  >
+                       
+        </activity>
+        
+		<activity android:name="ui.LunarDetail" android:screenOrientation="portrait"  >
                        
         </activity>
         

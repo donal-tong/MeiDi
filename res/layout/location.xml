@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white" >
+    <RelativeLayout 
+        android:id="@+id/nav"
+        android:layout_height="44dp"
+        android:layout_width="match_parent"
+         android:background="@drawable/tab_background"
+        >
+        <Button
+            android:id="@+id/leftBarButton"
+            android:layout_width="90dp"
+            android:layout_height="44dp"
+            android:drawableLeft="@drawable/btn_back_normal"
+            android:background="@null"
+            android:layout_centerVertical="true"
+            android:text="返回"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:drawablePadding="-20dp"
+            android:paddingLeft="12dp"
+            android:onClick="ButtonClick"
+            />
+        
+        <TextView 
+            android:id="@+id/titleBarView"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="100dp"
+      		android:layout_height="wrap_content"
+            android:text="城市选择"
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:lines="1"
+            android:scrollHorizontally="true"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:gravity="center"
+            />
+    </RelativeLayout>
+
+    <ListView
+        android:layout_below="@+id/nav"
+        android:id="@+id/listView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:cacheColorHint="#00000000"
+        android:fadingEdge="none"
+         >
+    </ListView>
+</RelativeLayout>
