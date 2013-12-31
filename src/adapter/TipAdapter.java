@@ -80,7 +80,7 @@ public class TipAdapter extends BaseAdapter {
 		for (int i = 0; i < model.tips.size(); i++) {
 			if (i == 0) {
 				cell.tip1.setVisibility(View.VISIBLE);
-				cell.tip1.setBackgroundResource(Integer.valueOf(model.tips.get(0).image));
+				ImageLoader.getInstance().displayImage(model.tips.get(0).image, cell.tip1, CommonValue.DisplayOptions.default_options);
 				cell.tip1.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View arg0) {
@@ -90,7 +90,7 @@ public class TipAdapter extends BaseAdapter {
 			}
 			else if (i == 1) {
 				cell.tip2.setVisibility(View.VISIBLE);
-				cell.tip2.setBackgroundResource(Integer.valueOf(model.tips.get(1).image));
+				ImageLoader.getInstance().displayImage(model.tips.get(1).image, cell.tip2, CommonValue.DisplayOptions.default_options);
 				cell.tip2.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View arg0) {
@@ -100,7 +100,7 @@ public class TipAdapter extends BaseAdapter {
 			}
 			else if (i == 2) {
 				cell.tip3.setVisibility(View.VISIBLE);
-				cell.tip3.setBackgroundResource(Integer.valueOf(model.tips.get(2).image));
+				ImageLoader.getInstance().displayImage(model.tips.get(2).image, cell.tip3, CommonValue.DisplayOptions.default_options);
 				cell.tip3.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View arg0) {
@@ -110,7 +110,7 @@ public class TipAdapter extends BaseAdapter {
 			}
 			else if (i == 3) {
 				cell.tip4.setVisibility(View.VISIBLE);
-				cell.tip4.setBackgroundResource(Integer.valueOf(model.tips.get(3).image));
+				ImageLoader.getInstance().displayImage(model.tips.get(3).image, cell.tip4, CommonValue.DisplayOptions.default_options);
 				cell.tip4.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View arg0) {

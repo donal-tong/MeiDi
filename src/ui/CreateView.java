@@ -58,7 +58,7 @@ public class CreateView extends AppActivity {
 		webseting.setJavaScriptEnabled(true);
 		webseting.setLightTouchEnabled(true);
 	    webseting.setDomStorageEnabled(true);             
-	    webseting.setAppCacheMaxSize(1024*1024*8);//设置缓冲大小，我设的是8M  
+	    webseting.setAppCacheMaxSize(1024*1024*8);
 	    String appCacheDir = this.getApplicationContext().getDir("cache", Context.MODE_PRIVATE).getPath();      
         webseting.setAppCachePath(appCacheDir);  
         webseting.setAllowFileAccess(true);  

@@ -109,16 +109,16 @@ public final class R {
 		public static final int clearwords_bg_nor = 0x7f02000b;
 		public static final int clearwords_bg_sel = 0x7f02000c;
 		public static final int clearwords_icon = 0x7f02000d;
-		public static final int ic_launcher = 0x7f020027;
-		public static final int ic_pulltorefresh_arrow = 0x7f020028;
-		public static final int loading_page_loading0 = 0x7f02002c;
-		public static final int loading_page_loading1 = 0x7f02002d;
-		public static final int loading_page_loading2 = 0x7f02002e;
-		public static final int loading_page_loading3 = 0x7f02002f;
-		public static final int nav_refresh = 0x7f020051;
-		public static final int new_data_toast = 0x7f020052;
-		public static final int refreshlistview_arrow = 0x7f020062;
-		public static final int review_bg_blue = 0x7f020063;
+		public static final int ic_launcher = 0x7f020028;
+		public static final int ic_pulltorefresh_arrow = 0x7f020029;
+		public static final int loading_page_loading0 = 0x7f02002d;
+		public static final int loading_page_loading1 = 0x7f02002e;
+		public static final int loading_page_loading2 = 0x7f02002f;
+		public static final int loading_page_loading3 = 0x7f020030;
+		public static final int nav_refresh = 0x7f020052;
+		public static final int new_data_toast = 0x7f020053;
+		public static final int refreshlistview_arrow = 0x7f020063;
+		public static final int review_bg_blue = 0x7f020064;
 	}
 	public static final class id {
 		public static final int arrow = 0x7f0b004d;

@@ -1,16 +1,13 @@
 package config;
 
-import tools.AppManager;
-import tools.ImageUtils;
 import android.graphics.Bitmap;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.LoadedFrom;
 import com.nostra13.universalimageloader.core.display.BitmapDisplayer;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
-import com.vikaa.baseapp.R;
+import com.vikaa.meidi.R;
 
 public class CommonValue {
 	
@@ -18,9 +15,9 @@ public class CommonValue {
 	public interface DisplayOptions {
 		public DisplayImageOptions default_options = new DisplayImageOptions.Builder()
 				.bitmapConfig(Bitmap.Config.RGB_565)
-				.showImageOnLoading(R.drawable.ic_launcher)
-				.showImageForEmptyUri(R.drawable.ic_launcher)
-				.showImageOnFail(R.drawable.ic_launcher)
+				.showImageOnLoading(R.drawable.contentimageloading)
+				.showImageForEmptyUri(R.drawable.contentimageloading)
+				.showImageOnFail(R.drawable.contentimageloading)
 				.cacheInMemory(true)
 				.cacheOnDisc(true)
 				.imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2) 
@@ -33,15 +30,15 @@ public class CommonValue {
 				})
 				.build();
 		
-		public DisplayImageOptions avatar_options = new DisplayImageOptions.Builder()
-		.bitmapConfig(Bitmap.Config.RGB_565)
-		.showImageOnLoading(R.drawable.ic_launcher)
-		.showImageForEmptyUri(R.drawable.ic_launcher)
-		.showImageOnFail(R.drawable.ic_launcher)
-		.cacheInMemory(true)
-		.cacheOnDisc(true)
-		.imageScaleType(ImageScaleType.EXACTLY_STRETCHED) 
-		.displayer(new RoundedBitmapDisplayer(ImageUtils.dip2px(AppManager.getAppManager().currentActivity(), 30)))
-		.build();
+//		public DisplayImageOptions avatar_options = new DisplayImageOptions.Builder()
+//		.bitmapConfig(Bitmap.Config.RGB_565)
+//		.showImageOnLoading(R.drawable.ic_launcher)
+//		.showImageForEmptyUri(R.drawable.ic_launcher)
+//		.showImageOnFail(R.drawable.ic_launcher)
+//		.cacheInMemory(true)
+//		.cacheOnDisc(true)
+//		.imageScaleType(ImageScaleType.EXACTLY_STRETCHED) 
+//		.displayer(new RoundedBitmapDisplayer(ImageUtils.dip2px(AppManager.getAppManager().currentActivity(), 30)))
+//		.build();
 	}
 }

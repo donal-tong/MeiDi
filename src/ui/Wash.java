@@ -1,5 +1,6 @@
 package ui;
 
+import moji.MojiEntity;
 import bean.SKWeather;
 
 
@@ -27,7 +28,7 @@ public class Wash extends AppActivity{
 	private TextView timeTV;
 	private TextView fallTV;
 	
-	static SKWeather weather;
+	static MojiEntity moji;
 
 	private String imagePath;
 	
@@ -128,7 +129,7 @@ public class Wash extends AppActivity{
 	@Override
 	protected void onResume() {
 		super.onResume();
-		String cityCode = appContext.getDisName();
+//		String cityCode = appContext.getDisName();
 //		if (cityCode.length() != 0) {
 //			String key = String.format("%s-%s", "weather", cityCode);
 //			SKWeather entity = (SKWeather) appContext.readObject(key);
@@ -138,11 +139,21 @@ public class Wash extends AppActivity{
 ////			}
 //		}
 		
+		String mojiCityId = appContext.getMojiCityId();
+		if (mojiCityId.length() != 0) {
+			String key = String.format("%s-%s", "moji", mojiCityId);
+			MojiEntity entity = (MojiEntity) appContext.readObject(key);
+			if(entity != null){
+				moji = entity;
+				drawPie();
+			}
+		}
+		
 	}
 	
 	private void drawPie() {
 		String waterTempString = "35~40℃";
-		int temp = Integer.valueOf(weather.temp);
+		int temp = Integer.valueOf(moji.cc.tmp);
 		if (temp <= 10) {
 			waterTempString = ("35~40℃");
 		} else if (temp >10 && temp < 20) {
@@ -155,9 +166,9 @@ public class Wash extends AppActivity{
 		waterTempTV.setText("水温"+waterTempString);
 		fallTV.setText("水量适中");
 		timeTV.setText("时长35～40min");
-		tempTV.setText(weather.temp+"℃");
-		windTV.setText(String.format("%s\n%s", weather.WD, weather.WS));
-		wetTV.setText(String.format("%s\n%s", "湿度", weather.SD));
+		tempTV.setText(moji.cc.htmp+"/"+moji.cc.ltmp+"℃");
+		windTV.setText(String.format("%s\n%s级", moji.cc.wdir, moji.cc.wl));
+		wetTV.setText("湿度\n"+moji.cc.hum+"%");
 	}
 	
 }

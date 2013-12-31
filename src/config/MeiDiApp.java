@@ -62,4 +62,16 @@ public class MeiDiApp extends AppContext{
 	public String getDisName() {
 		return (getProperty("disname"));
 	}
+	
+	public void setMojiCityId(final String id) {
+		setProperties(new Properties(){
+			{
+				setProperty("MojiCityId",id);
+			}
+		});
+	}
+	
+	public String getMojiCityId() {
+		return (getProperty("MojiCityId"));
+	}
 }

@@ -1,6 +1,8 @@
 package moji;
 
-public class AirIdxEntity {
+import bean.Entity;
+
+public class AirIdxEntity extends Entity {
 public String cityid;
 public String cityName; 
 public String title;
