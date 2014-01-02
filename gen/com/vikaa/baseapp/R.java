@@ -117,8 +117,8 @@ public final class R {
 		public static final int loading_page_loading3 = 0x7f020031;
 		public static final int nav_refresh = 0x7f020053;
 		public static final int new_data_toast = 0x7f020054;
-		public static final int refreshlistview_arrow = 0x7f020064;
-		public static final int review_bg_blue = 0x7f020065;
+		public static final int refreshlistview_arrow = 0x7f020065;
+		public static final int review_bg_blue = 0x7f020066;
 	}
 	public static final class id {
 		public static final int arrow = 0x7f0b004f;

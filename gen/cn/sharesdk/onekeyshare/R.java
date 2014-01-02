@@ -153,17 +153,17 @@ public final class R {
 		public static final int nav_refresh = 0x7f020053;
 		public static final int new_data_toast = 0x7f020054;
 		public static final int pin = 0x7f020055;
-		public static final int refreshlistview_arrow = 0x7f020064;
-		public static final int review_bg_blue = 0x7f020065;
-		public static final int share_tb_back = 0x7f020066;
-		public static final int share_vp_back = 0x7f020067;
-		public static final int ssdk_auth_title_back = 0x7f020069;
-		public static final int ssdk_back_arr = 0x7f02006a;
-		public static final int ssdk_logo = 0x7f02006b;
-		public static final int ssdk_title_div = 0x7f02006c;
-		public static final int title_back = 0x7f02007d;
-		public static final int title_shadow = 0x7f02007e;
-		public static final int white_point = 0x7f020084;
+		public static final int refreshlistview_arrow = 0x7f020065;
+		public static final int review_bg_blue = 0x7f020066;
+		public static final int share_tb_back = 0x7f020067;
+		public static final int share_vp_back = 0x7f020068;
+		public static final int ssdk_auth_title_back = 0x7f02006a;
+		public static final int ssdk_back_arr = 0x7f02006b;
+		public static final int ssdk_logo = 0x7f02006c;
+		public static final int ssdk_title_div = 0x7f02006d;
+		public static final int title_back = 0x7f02007e;
+		public static final int title_shadow = 0x7f02007f;
+		public static final int white_point = 0x7f020085;
 	}
 	public static final class id {
 		public static final int arrow = 0x7f0b004f;

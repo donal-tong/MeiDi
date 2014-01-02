@@ -569,10 +569,6 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 	   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img11+".gif", day6dIV, CommonValue.DisplayOptions.default_options);
 //	   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img12+".gif", day6nIV, CommonValue.DisplayOptions.default_options);
 	   	
-//	   	clothTV.setText(weather.index);
-//		lineTV.setText(weather.index_uv);
-//		sportTV.setText(weather.index_co);
-//		carTV.setText(weather.index_xc);
 		tripTV.setText(weather.index_tr);
 	}
 	
@@ -714,10 +710,25 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 		wetTV.setText("湿度"+moji.cc.hum+"%");
 		dayTV.setText(moji.cc.gdt+""+moji.cc.ldt);
 		handlerWeekWeather(moji);
-		
+		setBg(moji);
 		wuranLayout.setVisibility(View.VISIBLE);
 		pm2TV.setText(moji.air.lv);
 		qualityTV.setText(moji.air.aqigrade);
+	}
+	
+	private void setBg(MojiEntity moji) {
+		if (moji.cc.wd.indexOf("晴") != -1) {
+			homeBg.setBackgroundResource(R.drawable.qing);
+		}
+		else if (moji.cc.wd.indexOf("雨") != -1) {
+			homeBg.setBackgroundResource(R.drawable.yu);
+		}
+		else if (moji.cc.wd.indexOf("雪") != -1) {
+			homeBg.setBackgroundResource(R.drawable.xue);
+		}
+		else if (moji.cc.wd.indexOf("阴") != -1) {
+			homeBg.setBackgroundResource(R.drawable.yin);
+		}
 	}
 	
 	private void handlerWeekWeather(MojiEntity moji) {
@@ -757,10 +768,6 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
    				cleanupTV.setText(idx.desc);
 			}
 		}
-//   		Typeface face = Typeface.createFromAsset(getAssets(), "fonts/Climacons.ttf");
-//   		day1TV.setTypeface(face);
-//   		day1TV.setText("I");
-//   		day1TV.setTextSize(25);
 	}
 	
 	@Override
