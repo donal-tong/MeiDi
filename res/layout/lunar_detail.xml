@@ -48,7 +48,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/nav"
         android:textSize="80sp"
-        android:text="17"
+        android:textColor="#009039"
         />
      <TextView 
         android:layout_below="@+id/dayTV"
@@ -57,7 +57,8 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/lunTV"
         android:textSize="20sp"
-        android:text="17"
+        android:textColor="#61b84b"
+        android:layout_marginBottom="10dp"
         />	
         
      
@@ -68,7 +69,8 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/yTV"
         android:textSize="20sp"
-        android:text="17"
+        android:textColor="#009039"
+        android:padding="8dp"
         />	
 	<TextView 
         android:layout_below="@+id/yTV"
@@ -77,6 +79,7 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/jTV"
         android:textSize="20sp"
-        android:text="17"
+        android:padding="8dp"
+        android:textColor="#787b77"
         />	
 </RelativeLayout>
