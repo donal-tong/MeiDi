@@ -46,7 +46,7 @@
     <application
         android:name="config.MeiDiApp"
         android:allowBackup="true"
-        android:icon="@drawable/feng0001"
+        android:icon="@drawable/meidi1024"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.NoTitleBar" >
          <meta-data android:name="com.crashlytics.ApiKey" android:value="d6f3179ac695a7efd4c28c329ce8a5c04f2e0bc7"/>
@@ -79,6 +79,10 @@
         </activity>
         
 		<activity android:name="ui.LunarDetail" android:screenOrientation="portrait"  >
+                       
+        </activity>
+        
+		<activity android:name="ui.AirDetail" android:screenOrientation="portrait"  >
                        
         </activity>
         

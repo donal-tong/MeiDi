@@ -24,6 +24,8 @@
                 android:background="#7f4a6a7d"
                 android:id="@+id/wuranLayout"
                 android:visibility="gone"
+                android:onClick="ButtonClick"
+                android:clickable="true"
                 >
                 <TextView 
                     android:id="@+id/qualityTV"
@@ -485,7 +487,7 @@
 	    	            android:id="@+id/key1"
 	    	            android:layout_width="wrap_content"
 	    	            android:layout_height="wrap_content"
-	    	            android:text="穿衣指数"
+	    	            android:text="洗浴指数"
 	    	            android:textSize="13sp"
 	    	            android:textColor="@color/white"
 	    	            android:layout_alignParentRight="true"
@@ -690,7 +692,7 @@
 	    	        <ImageView 
 	    	            android:layout_width="45dp"
 	    	            android:layout_height="39dp"
-	    	            android:src="@drawable/trip"
+	    	            android:src="@drawable/cloth"
 	    	            android:layout_centerVertical="true"
 	    	            android:layout_marginLeft="10dp"
 	    	            />
@@ -698,7 +700,7 @@
 	    	            android:id="@+id/key6"
 	    	            android:layout_width="wrap_content"
 	    	            android:layout_height="wrap_content"
-	    	            android:text="旅游指数"
+	    	            android:text="穿衣指数"
 	    	            android:textSize="13sp"
 	    	            android:textColor="@color/white"
 	    	            android:layout_alignParentRight="true"

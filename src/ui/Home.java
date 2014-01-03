@@ -127,6 +127,8 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 	
 	private String cityName;
 	
+	private MojiEntity currentMoji;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -569,7 +571,6 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 	   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img11+".gif", day6dIV, CommonValue.DisplayOptions.default_options);
 //	   	imageLoader.displayImage("http://m.weather.com.cn/img/b"+weather.img12+".gif", day6nIV, CommonValue.DisplayOptions.default_options);
 	   	
-		tripTV.setText(weather.index_tr);
 	}
 	
 	private void handleWeatherAnimation(String weather) {
@@ -699,6 +700,7 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 //	}
 	
 	private void handleMoji(MojiEntity moji) {
+		currentMoji = moji;
 		weatherInfoView.setVisibility(View.VISIBLE);
 		tempTV.setText(moji.cc.tmp);
 		cImageView.setVisibility(View.VISIBLE);
@@ -717,6 +719,7 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 	}
 	
 	private void setBg(MojiEntity moji) {
+		Logger.i(moji.cc.wd);
 		if (moji.cc.wd.indexOf("晴") != -1) {
 			homeBg.setBackgroundResource(R.drawable.qing);
 		}
@@ -753,6 +756,7 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 //   		day6minTV.setText(moji.forecastDays.get(5).ltmp+"℃");
    		for (IdxListEntity idx : moji.idxs) {
    			if (idx.nm.equals("穿衣指数")) {
+   				tripTV.setText(idx.desc);
    				clothTV.setText(idx.desc);
 			}
    			else if (idx.nm.equals("紫外线指数")) {
@@ -861,6 +865,9 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 		case R.id.dayTV:
 			showLunar();
 			break;
+		case R.id.wuranLayout:
+			showAir();
+			break;
 		}
 	}
 	
@@ -872,6 +879,12 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 	private void showLunar() {
 		Intent intent = new Intent(this, LunarDetail.class);
 		intent.putExtra("lunar", dayTV.getText().toString());
+		startActivity(intent);
+	}
+	
+	private void showAir() {
+		Intent intent = new Intent(this, AirDetail.class);
+		intent.putExtra("moji", currentMoji);
 		startActivity(intent);
 	}
 	

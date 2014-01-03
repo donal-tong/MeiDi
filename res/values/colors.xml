@@ -8,4 +8,11 @@
 	
 	<color name="weather_background_color">#7f4a6a7d</color>
 	
+	<color name="air7">#310929</color>
+	<color name="air6">#460a38</color>
+	<color name="air5">#450d74</color>
+	<color name="air4">#ff0200</color>
+	<color name="air3">#eb4c00</color>
+	<color name="air2">#f7dd00</color>
+	<color name="air1">#8aca08</color>
 </resources>
