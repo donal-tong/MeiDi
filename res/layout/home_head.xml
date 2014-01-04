@@ -477,9 +477,9 @@
 	    	        android:background="@drawable/friendcard_button"
 	    	        >
 	    	        <ImageView 
-	    	            android:layout_width="45dp"
+	    	            android:layout_width="50dp"
 	    	            android:layout_height="39dp"
-	    	            android:src="@drawable/cloth"
+	    	            android:src="@drawable/xiyu"
 	    	            android:layout_centerVertical="true"
 	    	            android:layout_marginLeft="10dp"
 	    	            />
