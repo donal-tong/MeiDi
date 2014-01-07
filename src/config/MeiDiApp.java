@@ -2,6 +2,9 @@ package config;
 
 import java.util.Properties;
 
+import android.app.ApplicationErrorReport.CrashInfo;
+
+import com.crashlytics.android.Crashlytics;
 import com.nostra13.universalimageloader.utils.L;
 
 import tools.AppContext;

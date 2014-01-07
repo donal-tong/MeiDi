@@ -1,5 +1,6 @@
 package ui;
 
+import com.crashlytics.android.Crashlytics;
 import java.io.IOException;
 
 import tools.AppContext;
@@ -27,7 +28,6 @@ public class Tab extends TabActivity  implements OnCheckedChangeListener{
 	private RadioGroup mainTab;
 	public static TabHost mTabHost;
 	
-	//内容Intent
 	private Intent homeIntent;
 	private Intent nearmeIntent;
 	private Intent meIntent;
@@ -38,6 +38,7 @@ public class Tab extends TabActivity  implements OnCheckedChangeListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Crashlytics.start(this);
 		setContentView(R.layout.tab);
 		ShareSDK.initSDK(this);
 		AppManager.getAppManager().addActivity(this);
@@ -72,12 +73,12 @@ public class Tab extends TabActivity  implements OnCheckedChangeListener{
 	}
 	
 	/**
-	 * 构建TabHost的Tab页
-	 * @param tag 标记
-	 * @param resLabel 标签
-	 * @param resIcon 图标
-	 * @param content 该tab展示的内容
-	 * @return 一个tab
+	 * ????TabHost??Tab?
+	 * @param tag ???
+	 * @param resLabel ???
+	 * @param resIcon ???
+	 * @param content ??tab????????
+	 * @return ???tab
 	 */
 	private TabHost.TabSpec buildTabSpec(String tag, int resLabel, int resIcon,final Intent content) {
 		return this.mTabHost.newTabSpec(tag).setIndicator(getString(resLabel),
@@ -105,12 +106,12 @@ public class Tab extends TabActivity  implements OnCheckedChangeListener{
 	
 	private void copyDataBaseToPhone() {  
         DataBaseUtil util = new DataBaseUtil(this);  
-        // 判断数据库是否存在  
+        // ??????????????  
         boolean dbExist = util.checkDataBase();  
   
         if (dbExist) {  
             Logger.i("The database is exist.");  
-        } else {// 不存在就把raw里的数据库写入手机  
+        } else {// ????????raw??????????????  
             try {  
                 util.copyDataBase();  
             } catch (IOException e) {  

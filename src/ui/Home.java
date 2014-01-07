@@ -1,20 +1,16 @@
 package ui;
 
-import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import moji.IdxListEntity;
 import moji.MojiEntity;
 
-import tools.AppException;
-import tools.CalendarUtil;
 import tools.DBHelper;
 import tools.DBManager;
 import tools.DistrictDataBase;
 import tools.ImageUtils;
 import tools.Logger;
-import tools.Lunar;
 import tools.StringUtils;
 import tools.UIHelper;
 import widget.PullToRefreshView;
@@ -24,17 +20,13 @@ import widget.PullToRefreshView.OnHeaderRefreshListener;
 import bean.AirIndexEntity;
 import bean.Entity;
 import bean.ForecastWeather;
-import bean.IndexEntity;
 import bean.Result;
-import bean.SKWeather;
-
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.LocationManagerProxy;
 import com.amap.api.location.LocationProviderProxy;
 import com.vikaa.meidi.R;
 
-import config.ApiClent;
 import config.CommonValue;
 import config.WeatherClient;
 import config.WeatherClient.ClientCallback;
@@ -497,12 +489,6 @@ public class Home extends AppActivity implements AMapLocationListener, OnHeaderR
 	}
 	
 	private void getWeatherFromCache(String cityCode) {
-//		String key = String.format("%s-%s", "weather", cityCode);
-//		SKWeather entity = (SKWeather) appContext.readObject(key);
-//		if(entity != null){
-//			handleDayWeather(entity);
-//		}
-		
 		String key1 = String.format("%s-%s", "weekweather", cityCode);
 		ForecastWeather entity1 = (ForecastWeather) appContext.readObject(key1);
 		if(entity1 != null){
